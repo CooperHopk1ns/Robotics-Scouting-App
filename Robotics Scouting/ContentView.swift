@@ -9,10 +9,26 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Text("Robotics Scouting App")
+        NavigationView {
+            TabView {
+                Teams()
+                    .tabItem {
+                        Label("Teams", systemImage: "list.clipboard.fill")
+                    }
+                TeamInfoInput()
+                    .tabItem {
+                        Label("Input", systemImage: "pencil")
+                    }
+                Settings()
+                    .tabItem{
+                        Label("Settings", systemImage: "gearshape.fill")
+                    }
+            }
+            .onAppear {
+                print("------")
+                print(TeamsClass().teams)
+            }
         }
-        .padding()
     }
 }
 

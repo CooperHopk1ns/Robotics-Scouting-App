@@ -11,6 +11,11 @@
 		66641CBC29B1632D00566C24 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CBB29B1632D00566C24 /* ContentView.swift */; };
 		66641CBE29B1632E00566C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66641CBD29B1632E00566C24 /* Assets.xcassets */; };
 		66641CC129B1632E00566C24 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66641CC029B1632E00566C24 /* Preview Assets.xcassets */; };
+		66641CC929B1A92800566C24 /* TeamInfoInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CC829B1A92800566C24 /* TeamInfoInput.swift */; };
+		66641CCB29B1A93000566C24 /* TeamInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CCA29B1A93000566C24 /* TeamInfo.swift */; };
+		66641CCD29B1A93F00566C24 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CCC29B1A93F00566C24 /* Teams.swift */; };
+		66641CD029B1AA1D00566C24 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CCF29B1AA1D00566C24 /* Settings.swift */; };
+		66641CD229B1AB6C00566C24 /* TeamStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CD129B1AB6C00566C24 /* TeamStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,11 @@
 		66641CBB29B1632D00566C24 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		66641CBD29B1632E00566C24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66641CC029B1632E00566C24 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		66641CC829B1A92800566C24 /* TeamInfoInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamInfoInput.swift; sourceTree = "<group>"; };
+		66641CCA29B1A93000566C24 /* TeamInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamInfo.swift; sourceTree = "<group>"; };
+		66641CCC29B1A93F00566C24 /* Teams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
+		66641CCF29B1AA1D00566C24 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		66641CD129B1AB6C00566C24 /* TeamStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +63,7 @@
 			children = (
 				66641CB929B1632D00566C24 /* Robotics_ScoutingApp.swift */,
 				66641CBB29B1632D00566C24 /* ContentView.swift */,
+				66641CC729B1A90E00566C24 /* Helper Views */,
 				66641CBD29B1632E00566C24 /* Assets.xcassets */,
 				66641CBF29B1632E00566C24 /* Preview Content */,
 			);
@@ -65,6 +76,26 @@
 				66641CC029B1632E00566C24 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		66641CC729B1A90E00566C24 /* Helper Views */ = {
+			isa = PBXGroup;
+			children = (
+				66641CC829B1A92800566C24 /* TeamInfoInput.swift */,
+				66641CCA29B1A93000566C24 /* TeamInfo.swift */,
+				66641CCC29B1A93F00566C24 /* Teams.swift */,
+				66641CD129B1AB6C00566C24 /* TeamStruct.swift */,
+				66641CCE29B1AA0E00566C24 /* Settings */,
+			);
+			path = "Helper Views";
+			sourceTree = "<group>";
+		};
+		66641CCE29B1AA0E00566C24 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				66641CCF29B1AA1D00566C24 /* Settings.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +168,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66641CD029B1AA1D00566C24 /* Settings.swift in Sources */,
+				66641CCB29B1A93000566C24 /* TeamInfo.swift in Sources */,
+				66641CCD29B1A93F00566C24 /* Teams.swift in Sources */,
 				66641CBC29B1632D00566C24 /* ContentView.swift in Sources */,
+				66641CD229B1AB6C00566C24 /* TeamStruct.swift in Sources */,
 				66641CBA29B1632D00566C24 /* Robotics_ScoutingApp.swift in Sources */,
+				66641CC929B1A92800566C24 /* TeamInfoInput.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
