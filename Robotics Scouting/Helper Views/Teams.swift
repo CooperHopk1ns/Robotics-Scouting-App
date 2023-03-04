@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Teams: View {
     
-    var testTeam = Team.init(name: "3082", averagePoints: 154, gamesPlayed: 21)
+    var testTeam = Team.init(id: 3082, name: "3082", averagePoints: Double(140), gamesPlayed: 4, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12)
     @State var teams = TeamInfo().teams
     @State var searchText = ""
     
@@ -23,24 +23,40 @@ struct Teams: View {
             }
         }
     
-    
+    //On Launch
+    init() {
+        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
+            let decodedTeamData = try! JSONDecoder().decode([Team].self, from: teamData)
+            for i in 0...decodedTeamData.count-1 {
+                teams.append(decodedTeamData[i])
+                print("ajslkjasfaskfjas;lkdfjalsf \(decodedTeamData[i])")
+                print(teams)
+            }
+            print("JSON Works")
+            print(decodedTeamData)
+        }
+        print("Init \(teams)")
+    }
     var body: some View {
         VStack {
             NavigationView {
                 List((searchResults), id: \.self) {team in
                     NavigationLink {
-                        TeamInfo(selected: Int(team.name) ?? 0, points: Int(team.averagePoints), gamesPlayed: team.gamesPlayed, average: Int(team.averagePoints)/team.gamesPlayed)
+                        TeamInfo(selected: Int(team.name) ?? 0, gamesPlayed: team.gamesPlayed, average: Int(team.averagePoints)/team.gamesPlayed, points: Int(team.averagePoints), bottomAutoAveragePoints: team.autoBottomPoints/team.gamesPlayed, middleAutoAveragePoints: team.autoMiddlePoints/team.gamesPlayed, topAutoAveragePoints: team.autoTopPoints/team.gamesPlayed, bottomTeleAveragePoints: team.teleBottomPoints/team.gamesPlayed, middleTeleAveragePoints: team.teleMiddlePoints/team.gamesPlayed, topTeleAveragePoints: team.teleTopPoints/team.gamesPlayed)
                     } label: {
                         Text("\(team.name)")
                     }
                 }
                 .refreshable {
                     if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
-                        let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
-                        teams = decodedTeamData ?? [testTeam]
+                        let decodedTeamData = try! JSONDecoder().decode([Team].self, from: teamData)
+                        for i in 0...decodedTeamData.count-1 {
+                            teams.append(decodedTeamData[i])
+                            //Add Check
+                        }
                     }
                     print("------")
-                    print(TeamsClass().teams)
+                    print(teams)
                 }
                 .navigationTitle("Teams")
             }

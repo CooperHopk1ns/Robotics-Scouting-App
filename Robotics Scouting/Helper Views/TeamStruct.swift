@@ -7,10 +7,18 @@
 
 import Foundation
 
-struct Team: Hashable, Codable {
+struct Team: Hashable, Codable, Identifiable {
+    var id: Int
     var name: String
     var averagePoints: Double
     var gamesPlayed: Int
+    //Points
+    var autoBottomPoints: Int
+    var autoMiddlePoints: Int
+    var autoTopPoints: Int
+    var teleBottomPoints: Int
+    var teleMiddlePoints: Int
+    var teleTopPoints: Int
 }
 
 class TeamsClass : ObservableObject {

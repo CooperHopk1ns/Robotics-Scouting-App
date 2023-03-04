@@ -17,7 +17,7 @@ struct ContentView: View {
                     }
                 TeamInfoInput()
                     .tabItem {
-                        Label("Input", systemImage: "pencil")
+                        Label("Input", systemImage: "square.and.pencil")
                     }
                 Settings()
                     .tabItem{
