@@ -11,7 +11,7 @@ struct TeamInfoInput: View {
     
     //Basic Variables
     @State var screenWidth = UIScreen.main.bounds.width
-    @State var new = true
+    @State var new = false
     @State var location = 0
     @FocusState private var isFocused: Bool
     @State private var showAlert = false
@@ -32,20 +32,6 @@ struct TeamInfoInput: View {
     @State var middleTelePoints = 0
     @State var topTelePoints = 0
     @State var allianceLinks = 0
-    
-    init() {
-        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
-            let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
-            teams.removeAll()
-            if (decodedTeamData?.count ?? 0 > 0) {
-                for i in 0...(decodedTeamData?.count ?? 1)-1 {
-                    teams.append(decodedTeamData?[i] ?? Teams().testTeam)
-                }
-            }
-        }
-        print("teamsInput------")
-        print(teams)
-    }
     
     var body: some View {
         NavigationView {
@@ -201,8 +187,6 @@ struct TeamInfoInput: View {
                     }
                     .padding()
                     //Enter
-                    //Slight Error on app launch creating a new team replaces current one
-                    //Duplicating Error even with same id
                     Button("Enter") {
                         if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
                             let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
@@ -213,12 +197,11 @@ struct TeamInfoInput: View {
                                 }
                             }
                         }
-                        print("teamsInput------")
-                        print(teams)
                         isFocused = false
                         if (team != "" && matchNumber != 0 && amtOfGames != 0) {
                             pointsScored = bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints
                             print(teams.count)
+                            print("running")
                             if (teams.count > 0) {
                                 for i in 0...teams.count-1 {
                                     print(i)
@@ -244,11 +227,8 @@ struct TeamInfoInput: View {
                                     
                                 }
                             }
-                            print("Points Scored")
-                            print(teams.count)
                             if let encoded = try? JSONEncoder().encode(teams) {
                                 UserDefaults.standard.set(encoded, forKey: "teamsKey")
-                                print("encoded")
                             }
                             //Clear
                             pointsScored = 0
@@ -262,6 +242,7 @@ struct TeamInfoInput: View {
                             team = ""
                             amtOfGames = 0
                             matchNumber = 0
+                            new = false
                         } else {
                             print("Error")
                             showAlert = true;

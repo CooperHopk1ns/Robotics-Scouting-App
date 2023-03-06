@@ -24,6 +24,23 @@ struct Teams: View {
             }
         }
     
+    init() {
+        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
+            let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
+            print(decodedTeamData?.count ?? -1)
+            if (decodedTeamData?.count ?? 0 > 0) {
+                for i in 0...(decodedTeamData?.count ?? 1)-1 {
+                    //ERROR HAPPENS BECAUSE IT IS A STATE VAR AND CANNOT BE MUTATED DURING INIT
+                    //ALSO ADD SOME QUICK LOGIC CHECKS
+                    teams.append(decodedTeamData![i])
+                    print(decodedTeamData![i])
+                    print("runnin")
+                    print(teams)
+                }
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
             NavigationView {
@@ -39,7 +56,7 @@ struct Teams: View {
                         let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
                         teams.removeAll()
                         if (decodedTeamData?.count ?? 0 > 0) {
-                            for i in 0...(decodedTeamData?.count ?? 0)-1 {
+                            for i in 0...(decodedTeamData?.count ?? 1)-1 {
                                 teams.append(decodedTeamData?[i] ?? testTeam)
                                 //Add Check
                             }
