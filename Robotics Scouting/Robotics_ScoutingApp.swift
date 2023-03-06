@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct Robotics_ScoutingApp: App {
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

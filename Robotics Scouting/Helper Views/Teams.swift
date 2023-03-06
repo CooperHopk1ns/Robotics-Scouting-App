@@ -9,8 +9,9 @@ import SwiftUI
 
 struct Teams: View {
     
+    @State var teams : [Team] = []
+    
     var testTeam = Team.init(id: 3082, name: "3082", averagePoints: Double(140), gamesPlayed: 4, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12)
-    @State var teams = TeamInfo().teams
     @State var searchText = ""
     
     var searchResults: [Team] {
@@ -23,20 +24,6 @@ struct Teams: View {
             }
         }
     
-    //On Launch
-    init() {
-        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
-            let decodedTeamData = try! JSONDecoder().decode([Team].self, from: teamData)
-            for i in 0...decodedTeamData.count-1 {
-                teams.append(decodedTeamData[i])
-                print("ajslkjasfaskfjas;lkdfjalsf \(decodedTeamData[i])")
-                print(teams)
-            }
-            print("JSON Works")
-            print(decodedTeamData)
-        }
-        print("Init \(teams)")
-    }
     var body: some View {
         VStack {
             NavigationView {
@@ -49,10 +36,13 @@ struct Teams: View {
                 }
                 .refreshable {
                     if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
-                        let decodedTeamData = try! JSONDecoder().decode([Team].self, from: teamData)
-                        for i in 0...decodedTeamData.count-1 {
-                            teams.append(decodedTeamData[i])
-                            //Add Check
+                        let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
+                        teams.removeAll()
+                        if (decodedTeamData?.count ?? 0 > 0) {
+                            for i in 0...(decodedTeamData?.count ?? 0)-1 {
+                                teams.append(decodedTeamData?[i] ?? testTeam)
+                                //Add Check
+                            }
                         }
                     }
                     print("------")

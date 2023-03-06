@@ -13,14 +13,17 @@ struct TeamInfoInput: View {
     @State var screenWidth = UIScreen.main.bounds.width
     @State var new = true
     @State var location = 0
+    @FocusState private var isFocused: Bool
+    @State private var showAlert = false
     //Team Variables
     @State var alliance = "red"
     @State var alliances = ["red", "blue"]
     @State var team = ""
     @State var matchNumber = 0
-    @State var teams = TeamInfo().teams
     @State var amtOfGames = 0
+    @State var teams : [Team] = []
     //Points Var
+    //CHANGE ALL TO DOUBLES WITH LIMIT OF 3 DECIMALS
     @State var pointsScored = 0
     @State var bottomAutoPoints = 0
     @State var middleAutoPoints = 0
@@ -29,6 +32,20 @@ struct TeamInfoInput: View {
     @State var middleTelePoints = 0
     @State var topTelePoints = 0
     @State var allianceLinks = 0
+    
+    init() {
+        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
+            let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
+            teams.removeAll()
+            if (decodedTeamData?.count ?? 0 > 0) {
+                for i in 0...(decodedTeamData?.count ?? 1)-1 {
+                    teams.append(decodedTeamData?[i] ?? Teams().testTeam)
+                }
+            }
+        }
+        print("teamsInput------")
+        print(teams)
+    }
     
     var body: some View {
         NavigationView {
@@ -56,6 +73,7 @@ struct TeamInfoInput: View {
                             )
                             .textFieldStyle(.roundedBorder)
                             .keyboardType(.numberPad)
+                            .focused($isFocused)
                         }
                     }
                     .padding()
@@ -70,6 +88,7 @@ struct TeamInfoInput: View {
                             )
                             .textFieldStyle(.roundedBorder)
                             .keyboardType(.numberPad)
+                            .focused($isFocused)
                         }
                         .padding()
                     }
@@ -83,6 +102,7 @@ struct TeamInfoInput: View {
                         )
                         .textFieldStyle(.roundedBorder)
                         .keyboardType(.numberPad)
+                        .focused($isFocused)
                     }
                     .padding()
                     //Alliance Links
@@ -95,6 +115,7 @@ struct TeamInfoInput: View {
                         )
                         .textFieldStyle(.roundedBorder)
                         .keyboardType(.numberPad)
+                        .focused($isFocused)
                     }
                     .padding()
                     //Points
@@ -111,6 +132,7 @@ struct TeamInfoInput: View {
                                 )
                                 .textFieldStyle(.roundedBorder)
                                 .keyboardType(.numberPad)
+                                .focused($isFocused)
                             }
                             .padding([.top, .bottom], 8)
                             //Middle Auto Points Scored
@@ -123,6 +145,7 @@ struct TeamInfoInput: View {
                                 )
                                 .textFieldStyle(.roundedBorder)
                                 .keyboardType(.numberPad)
+                                .focused($isFocused)
                             }
                             //Top Auto Points Scored
                             HStack {
@@ -134,6 +157,7 @@ struct TeamInfoInput: View {
                                 )
                                 .textFieldStyle(.roundedBorder)
                                 .keyboardType(.numberPad)
+                                .focused($isFocused)
                             }
                         }
                         VStack {
@@ -147,6 +171,7 @@ struct TeamInfoInput: View {
                                 )
                                 .textFieldStyle(.roundedBorder)
                                 .keyboardType(.numberPad)
+                                .focused($isFocused)
                             }
                             //Middle Tele Points Scored
                             HStack {
@@ -158,6 +183,7 @@ struct TeamInfoInput: View {
                                 )
                                 .textFieldStyle(.roundedBorder)
                                 .keyboardType(.numberPad)
+                                .focused($isFocused)
                             }
                             //Top Tele Points Scored
                             HStack {
@@ -168,14 +194,29 @@ struct TeamInfoInput: View {
                                         formatter: NumberFormatter()
                                 )
                                 .textFieldStyle(.roundedBorder)
-                                
+                                .keyboardType(.numberPad)
+                                .focused($isFocused)
                             }
                         }
                     }
                     .padding()
                     //Enter
-                    Button("Enter", action: {
-                        if (team != "" && matchNumber != 0 && amtOfGames != 0 && allianceLinks != 0 && bottomAutoPoints != 0 && middleAutoPoints != 0 && topAutoPoints != 0 && bottomTelePoints != 0 && middleTelePoints != 0 && topTelePoints != 0) {
+                    //Slight Error on app launch creating a new team replaces current one
+                    //Duplicating Error even with same id
+                    Button("Enter") {
+                        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
+                            let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
+                            teams.removeAll()
+                            if (decodedTeamData?.count ?? 0 > 0) {
+                                for i in 0...(decodedTeamData?.count ?? 1)-1 {
+                                    teams.append(decodedTeamData?[i] ?? Teams().testTeam)
+                                }
+                            }
+                        }
+                        print("teamsInput------")
+                        print(teams)
+                        isFocused = false
+                        if (team != "" && matchNumber != 0 && amtOfGames != 0) {
                             pointsScored = bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints
                             print(teams.count)
                             if (teams.count > 0) {
@@ -183,18 +224,19 @@ struct TeamInfoInput: View {
                                     print(i)
                                     let teamName = teams[i].name
                                     if (teamName == team) {
-                                        new = false
-                                    } else {
                                         new = true
                                         location = i
+                                        print("its new check")
+                                    } else {
+                                        new = false
+                                        print("its not new")
                                     }
                                 }
                             }
-                            if (new == true) {
+                            if (new == false) {
                                 teams.append(Team.init(id: Int(team) ?? 0, name: team, averagePoints: Double(pointsScored), gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
+                                    print("its new")
                             } else {
-                                //Math for adding then averaging
-                                //Add check for if games played not changed
                                 if (teams.count > 0) {
                                     let tempTeam = teams[location]
                                     teams.remove(at: location)
@@ -206,11 +248,28 @@ struct TeamInfoInput: View {
                             print(teams.count)
                             if let encoded = try? JSONEncoder().encode(teams) {
                                 UserDefaults.standard.set(encoded, forKey: "teamsKey")
+                                print("encoded")
                             }
+                            //Clear
+                            pointsScored = 0
+                            bottomAutoPoints = 0
+                            middleAutoPoints = 0
+                            topAutoPoints = 0
+                            bottomTelePoints = 0
+                            middleTelePoints = 0
+                            topTelePoints = 0
+                            allianceLinks = 0
+                            team = ""
+                            amtOfGames = 0
+                            matchNumber = 0
                         } else {
                             print("Error")
+                            showAlert = true;
                         }
-                    })
+                    }
+                    .alert(isPresented: $showAlert) {
+                        Alert(title: Text("Error"), message: Text("Please Fill In All Values Not Listed Under Points"))
+                    }
                 }
                 .frame(alignment: .top)
                 .padding([.bottom], 50)
