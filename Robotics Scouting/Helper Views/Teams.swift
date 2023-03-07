@@ -34,20 +34,7 @@ struct Teams: View {
                         Text("\(team.name)")
                     }
                 }
-                .refreshable {
-                    if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
-                        let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
-                        teams.removeAll()
-                        if (decodedTeamData?.count ?? 0 > 0) {
-                            for i in 0...(decodedTeamData?.count ?? 1)-1 {
-                                teams.append(decodedTeamData?[i] ?? testTeam)
-                                //Add Check
-                            }
-                        }
-                    }
-                    print("------")
-                    print(teams)
-                }
+                
                 .onAppear {
                     if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
                         let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
@@ -57,7 +44,6 @@ struct Teams: View {
                                 teams.append(decodedTeamData![i])
                                 print(decodedTeamData![i])
                                 print("runnin")
-                                print(teams)
                             }
                         }
                     }

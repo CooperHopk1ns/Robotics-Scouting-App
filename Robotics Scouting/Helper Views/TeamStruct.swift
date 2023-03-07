@@ -20,7 +20,3 @@ struct Team: Hashable, Codable, Identifiable {
     var teleMiddlePoints: Int
     var teleTopPoints: Int
 }
-
-class TeamsClass : ObservableObject {
-    @Published var teams : [Team] = []
-}

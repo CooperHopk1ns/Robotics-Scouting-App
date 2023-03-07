@@ -25,10 +25,6 @@ struct ContentView: View {
                         Label("Settings", systemImage: "gearshape.fill")
                     }
             }
-            .onAppear {
-                print("------")
-                print(TeamsClass().teams)
-            }
         }
     }
 }
