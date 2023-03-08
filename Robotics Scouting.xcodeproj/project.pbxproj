@@ -27,6 +27,7 @@
 		6610D04829B62A09001B8F9C /* Languages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Languages.swift; sourceTree = "<group>"; };
 		6610D04A29B62B91001B8F9C /* FeedbackForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackForm.swift; sourceTree = "<group>"; };
 		6610D04C29B63220001B8F9C /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
+		6610ECC929B8C4B100D1161D /* Robotics-Scouting-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Robotics-Scouting-Info.plist"; sourceTree = SOURCE_ROOT; };
 		66641CB629B1632D00566C24 /* Robotics Scouting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Robotics Scouting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		66641CB929B1632D00566C24 /* Robotics_ScoutingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Robotics_ScoutingApp.swift; sourceTree = "<group>"; };
 		66641CBB29B1632D00566C24 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -80,6 +81,7 @@
 		66641CB829B1632D00566C24 /* Robotics Scouting */ = {
 			isa = PBXGroup;
 			children = (
+				6610ECC929B8C4B100D1161D /* Robotics-Scouting-Info.plist */,
 				66641CB929B1632D00566C24 /* Robotics_ScoutingApp.swift */,
 				66641CBB29B1632D00566C24 /* ContentView.swift */,
 				66641CC729B1A90E00566C24 /* Helper Views */,
@@ -330,6 +332,7 @@
 				DEVELOPMENT_TEAM = 4FA46Q6PPA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Robotics-Scouting-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -359,6 +362,7 @@
 				DEVELOPMENT_TEAM = 4FA46Q6PPA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Robotics-Scouting-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

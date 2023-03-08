@@ -15,14 +15,91 @@ struct Teams: View {
     @State var searchText = ""
     
     var searchResults: [Team] {
-            if searchText.isEmpty {
-                return teams
-            } else {
-                return teams.filter {
-                    $0.name.localizedCaseInsensitiveContains(searchText)
-                }
+        if searchText.isEmpty {
+            return teams
+        } else {
+            return teams.filter {
+                $0.name.localizedCaseInsensitiveContains(searchText)
             }
         }
+    }
+    
+    let teamJSONDict = """
+    {
+    "success":team,
+    "team": {
+            "id":3,
+            "team":"team",
+            "matchNumber":"",
+            "alliance":"",
+            "priorMatches":"0",
+            "autoBottom":"0",
+            "autoMiddle":"0",
+            "autoTop":"0",
+            "teleBottom":"0",
+            "teleMiddle":"0",
+            "teleTop":"0",
+            allianceLinks":"0",
+            "createdAt":"2023-03-08T05:02:41.107Z",
+            "updatedAt":"2023-03-08T05:02:41.107Z"
+            }
+    }
+    """.data(using: .utf8)!
+    
+    struct teamJSONStruct: Decodable {
+        var id: Int
+        var team: String
+        var matchNumber: Int
+        var alliance: String
+        var priorMatches: Int
+        var autoBottom: Int
+        var autoMiddle: Int
+        var autoTop: Int
+        var teleBottom: Int
+        var teleMiddle: Int
+        var teleTop: Int
+        var allianceLinks: Int
+    }
+    
+    func getTeamsRequest() async {
+        guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/team/data") else {
+            print("error")
+            return
+        }
+        do {
+            let(data, _) = try await URLSession.shared.data(from: teamsURL)
+            
+            let decodedTeamData = try! JSONDecoder().decode(responseJSON.self, from: data)
+            print("Data is \(decodedTeamData)")
+            var points = Int(decodedTeamData.team.autoBottom) ?? 1
+            if (points == 0) {
+                points+=1
+            }
+            var tempTeam = Team(id: decodedTeamData.team.id, name: String(decodedTeamData.team.id), averagePoints: Double(points), gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 0, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0)
+            if (tempTeam.gamesPlayed == 0) {
+                tempTeam.gamesPlayed += 1
+            }
+            var new = true
+            print(teams.count)
+            if (teams.count > 0) {
+                for i in 0...teams.count - 1 {
+                    if (teams[i].name == tempTeam.name) {
+                        new = false
+                    }
+                }
+                if (new == true) {
+                    teams.append(tempTeam)
+                }
+            } else {
+                teams.append(tempTeam)
+            }
+            if let encoded = try? JSONEncoder().encode(teams) {
+                UserDefaults.standard.set(encoded, forKey: "teamsKey")
+            }
+        } catch {
+            print("Error, Invalid Data")
+        }
+    }
     
     var body: some View {
         VStack {
@@ -36,6 +113,7 @@ struct Teams: View {
                 }
                 
                 .onAppear {
+                    //ADD JSON GET FROM AYMANS API
                     if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
                         let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
                         teams.removeAll()
@@ -47,6 +125,10 @@ struct Teams: View {
                             }
                         }
                     }
+                }
+                .refreshable {
+                    await getTeamsRequest()
+                    print("run")
                 }
                 .navigationTitle("Teams")
             }

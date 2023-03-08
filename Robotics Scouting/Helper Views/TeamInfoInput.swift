@@ -198,8 +198,8 @@ struct TeamInfoInput: View {
                     //Enter
                     Button("Enter") {
                         //ADD ON ENTER SWITCHING VIEWS
-                        //Bug with input duplicating again when not immediately following
                         //Add Standard Input Logic Checking
+                        //ADD JSON PUSH USING AYMANS API
                         if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
                             let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
                             teams.removeAll()
@@ -238,8 +238,8 @@ struct TeamInfoInput: View {
                                 teams.append(Team.init(id: Int(team) ?? 0, name: team, averagePoints: Double(pointsScored), gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
                                     print("its new")
                             } else {
-                                    let tempTeam = teams[location]
-                                    teams.remove(at: location)
+                                let tempTeam = teams[location]
+                                teams.remove(at: location)
                                 teams.insert(Team.init(id: Int(team) ?? 0, name: team, averagePoints: Double((tempTeam.averagePoints + Double(pointsScored))/2), gamesPlayed: amtOfGames, autoBottomPoints: tempTeam.autoBottomPoints + bottomAutoPoints, autoMiddlePoints: tempTeam.autoMiddlePoints + middleAutoPoints, autoTopPoints: tempTeam.autoTopPoints + topAutoPoints, teleBottomPoints: tempTeam.teleBottomPoints + bottomTelePoints, teleMiddlePoints: tempTeam.teleMiddlePoints + middleTelePoints, teleTopPoints: tempTeam.teleTopPoints + topTelePoints), at: location)
                             }
                             if let encoded = try? JSONEncoder().encode(teams) {
