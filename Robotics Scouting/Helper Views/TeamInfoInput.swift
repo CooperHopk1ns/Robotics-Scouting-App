@@ -34,6 +34,55 @@ struct TeamInfoInput: View {
     @State var topTelePoints = 0
     @State var allianceLinks = 0
     
+    //Push New Team To API
+    func pushTeam() async {
+        print(team)
+        guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(team)/data") else {
+            print("error")
+            return
+        }
+            //Convert to pushJSON
+            let tempPushJSON = pushJSON.init(team: Int(team) ?? 0, password: "chicken3082!", matchNumber: amtOfGames, alliance: "blue", priorMatches: amtOfGames, autoBottom: bottomAutoPoints, autoMiddle: middleAutoPoints, autoTop: topAutoPoints, teleBottom: bottomTelePoints, teleMiddle: middleTelePoints, teleTop: topTelePoints, allianceLinks: 3)
+            if let encoded = try? JSONEncoder().encode(tempPushJSON) {
+                print(tempPushJSON)
+                print(encoded)
+                var request = URLRequest(url: teamsURL)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.httpMethod = "POST"
+                request.httpBody = encoded
+                do {
+                    print("Pushed to API")
+                    URLSession.shared.dataTask(with: request) {
+                                (data, response, error) in
+                                print(response as Any)
+                                if let error = error {
+                                    print("Error\(error)")
+                                    return
+                                }
+                                guard let data = data else{
+                                    return
+                                }
+                                print(data, String(data: data, encoding: .utf8) ?? "*unknown encoding*")
+                    }.resume()
+                }
+        }
+        //Clear
+        pointsScored = 0
+        bottomAutoPoints = 0
+        middleAutoPoints = 0
+        topAutoPoints = 0
+        bottomTelePoints = 0
+        middleTelePoints = 0
+        topTelePoints = 0
+        allianceLinks = 0
+        team = ""
+        amtOfGames = 0
+        matchNumber = 0
+        new = true
+        count = 0
+    }
+    
+    
     var body: some View {
         NavigationView {
                 VStack {
@@ -119,78 +168,76 @@ struct TeamInfoInput: View {
                         VStack {
                             //Bottom Auto Points Scored
                             HStack {
-                                Text("Bottom Auto:")
-                                TextField (
-                                    "Bottom Auto",
-                                    value: $bottomAutoPoints,
-                                    formatter: NumberFormatter()
-                                )
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.numbersAndPunctuation)
-                                .focused($isFocused)
+                                Stepper {
+                                    Text("Bottom Auto: \(bottomAutoPoints)")
+                                } onIncrement: {
+                                    bottomAutoPoints += 1
+                                } onDecrement: {
+                                    bottomAutoPoints -= 1
+                                }
+                                .padding([.leading, .trailing], screenWidth/6)
                             }
                             .padding([.top, .bottom], 8)
                             //Middle Auto Points Scored
                             HStack {
-                                Text("Middle Auto:")
-                                TextField (
-                                        "Middle Auto",
-                                        value: $middleAutoPoints,
-                                        formatter: NumberFormatter()
-                                )
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.numbersAndPunctuation)
-                                .focused($isFocused)
+                                Stepper {
+                                    Text("Middle Auto: \(middleAutoPoints)")
+                                } onIncrement: {
+                                    middleAutoPoints += 1
+                                } onDecrement: {
+                                    bottomAutoPoints -= 1
+                                }
+                                .padding([.leading, .trailing], screenWidth/6)
                             }
                             //Top Auto Points Scored
                             HStack {
-                                Text("Top Auto:")
-                                TextField (
-                                    "Top Auto",
-                                    value: $topAutoPoints,
-                                    formatter: NumberFormatter()
-                                )
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.numbersAndPunctuation)
-                                .focused($isFocused)
+                                Stepper {
+                                    Text("Top Auto: \(topAutoPoints)")
+                                } onIncrement: {
+                                    topAutoPoints += 1
+                                } onDecrement: {
+                                    topAutoPoints -= 1
+                                }
+                                .padding([.leading, .trailing], screenWidth/6)
                             }
                         }
                         VStack {
                             //Bottom Tele Points Scored
                             HStack {
-                                Text("Bottom Tele:")
-                                TextField (
-                                    "Bottom Tele",
-                                    value: $bottomTelePoints,
-                                    formatter: NumberFormatter()
-                                )
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.numbersAndPunctuation)
-                                .focused($isFocused)
+                                Stepper {
+                                    Text("Bottom Tele: \(bottomTelePoints)")
+                                } onIncrement: {
+                                    bottomTelePoints += 1
+                                } onDecrement: {
+                                    bottomTelePoints -= 1
+                                }
+                                .padding([.leading, .trailing], screenWidth/6)
                             }
                             //Middle Tele Points Scored
                             HStack {
-                                Text("Middle Tele:")
-                                TextField (
-                                    "Middle Tele",
-                                    value: $middleTelePoints,
-                                    formatter: NumberFormatter()
-                                )
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.numbersAndPunctuation)
-                                .focused($isFocused)
+                                Stepper {
+                                    Text("Middle Tele: \(middleTelePoints)")
+                                } onIncrement: {
+                                    middleTelePoints += 1
+                                } onDecrement: {
+                                    if (middleTelePoints >= 1) {
+                                        middleTelePoints -= 1
+                                    }
+                                }
+                                .padding([.leading, .trailing], screenWidth/6)
                             }
                             //Top Tele Points Scored
                             HStack {
-                                Text("Top Tele:")
-                                TextField (
-                                        "Top Tele",
-                                        value: $topTelePoints,
-                                        formatter: NumberFormatter()
-                                )
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.numbersAndPunctuation)
-                                .focused($isFocused)
+                                Stepper {
+                                    Text("Top Tele: \(topTelePoints)")
+                                } onIncrement: {
+                                    topTelePoints += 1
+                                } onDecrement: {
+                                    if (topTelePoints >= 1) {
+                                        topTelePoints -= 1
+                                    }
+                                }
+                                .padding([.leading, .trailing], screenWidth/6)
                             }
                         }
                     }
@@ -199,7 +246,6 @@ struct TeamInfoInput: View {
                     Button("Enter") {
                         //ADD ON ENTER SWITCHING VIEWS
                         //Add Standard Input Logic Checking
-                        //ADD JSON PUSH USING AYMANS API
                         if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
                             let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
                             teams.removeAll()
@@ -229,36 +275,26 @@ struct TeamInfoInput: View {
                                     }
                                 }
                             } else {
-                                teams.append(Team.init(id: Int(team) ?? 0, name: team, averagePoints: Double(pointsScored), gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
+                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
                             }
                             //Append
                             print(new)
                             if (new == true) {
                                 print(count)
-                                teams.append(Team.init(id: Int(team) ?? 0, name: team, averagePoints: Double(pointsScored), gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
+                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
                                     print("its new")
                             } else {
                                 let tempTeam = teams[location]
                                 teams.remove(at: location)
-                                teams.insert(Team.init(id: Int(team) ?? 0, name: team, averagePoints: Double((tempTeam.averagePoints + Double(pointsScored))/2), gamesPlayed: amtOfGames, autoBottomPoints: tempTeam.autoBottomPoints + bottomAutoPoints, autoMiddlePoints: tempTeam.autoMiddlePoints + middleAutoPoints, autoTopPoints: tempTeam.autoTopPoints + topAutoPoints, teleBottomPoints: tempTeam.teleBottomPoints + bottomTelePoints, teleMiddlePoints: tempTeam.teleMiddlePoints + middleTelePoints, teleTopPoints: tempTeam.teleTopPoints + topTelePoints), at: location)
+                                teams.insert(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, autoBottomPoints: tempTeam.autoBottomPoints + bottomAutoPoints, autoMiddlePoints: tempTeam.autoMiddlePoints + middleAutoPoints, autoTopPoints: tempTeam.autoTopPoints + topAutoPoints, teleBottomPoints: tempTeam.teleBottomPoints + bottomTelePoints, teleMiddlePoints: tempTeam.teleMiddlePoints + middleTelePoints, teleTopPoints: tempTeam.teleTopPoints + topTelePoints), at: location)
                             }
                             if let encoded = try? JSONEncoder().encode(teams) {
                                 UserDefaults.standard.set(encoded, forKey: "teamsKey")
                             }
-                            //Clear
-                            pointsScored = 0
-                            bottomAutoPoints = 0
-                            middleAutoPoints = 0
-                            topAutoPoints = 0
-                            bottomTelePoints = 0
-                            middleTelePoints = 0
-                            topTelePoints = 0
-                            allianceLinks = 0
-                            team = ""
-                            amtOfGames = 0
-                            matchNumber = 0
-                            new = true
-                            count = 0
+                            //Push To API
+                            Task {
+                                await pushTeam()
+                            }
                         } else {
                             print("Error")
                             showAlert = true;
@@ -271,6 +307,7 @@ struct TeamInfoInput: View {
                 .frame(alignment: .top)
                 .padding([.bottom], 50)
                 .navigationTitle("New Team Data")
+                .background(Color.cyan)
             }
         }
         .onAppear {

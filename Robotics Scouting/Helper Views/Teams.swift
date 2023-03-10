@@ -11,7 +11,7 @@ struct Teams: View {
     
     @State var teams : [Team] = []
     
-    var testTeam = Team.init(id: 3082, name: "3082", averagePoints: Double(140), gamesPlayed: 4, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12)
+    var testTeam = Team.init(id: 3082, name: "3082", gamesPlayed: 4, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12)
     @State var searchText = ""
     
     var searchResults: [Team] {
@@ -62,58 +62,62 @@ struct Teams: View {
     }
     
     func getTeamsRequest() async {
-        guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/team/data") else {
-            print("error")
-            return
-        }
-        do {
-            let(data, _) = try await URLSession.shared.data(from: teamsURL)
-            
-            let decodedTeamData = try! JSONDecoder().decode(responseJSON.self, from: data)
-            print("Data is \(decodedTeamData)")
-            var points = Int(decodedTeamData.team.autoBottom) ?? 1
-            if (points == 0) {
-                points+=1
+        for i in 0...9999 {
+            guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(i)/data") else {
+                print("error")
+                return
             }
-            var tempTeam = Team(id: decodedTeamData.team.id, name: String(decodedTeamData.team.id), averagePoints: Double(points), gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 0, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0)
-            if (tempTeam.gamesPlayed == 0) {
-                tempTeam.gamesPlayed += 1
-            }
-            var new = true
-            print(teams.count)
-            if (teams.count > 0) {
-                for i in 0...teams.count - 1 {
-                    if (teams[i].name == tempTeam.name) {
-                        new = false
-                    }
+            do {
+                let(data, _) = try await URLSession.shared.data(from: teamsURL)
+                
+                guard let decodedTeamData = try JSONDecoder().decode(responseJSON?.self, from: data) else {
+                    print("Error")
+                    return
                 }
-                if (new == true) {
+                print("Data is \(decodedTeamData)")
+                var points = Int(decodedTeamData.team.autoBottom) ?? 1
+                if (points == 0) {
+                    points+=1
+                }
+                var tempTeam = Team(id: decodedTeamData.team.id, name: String(decodedTeamData.team.id), gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 0, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0)
+                if (tempTeam.gamesPlayed == 0) {
+                    tempTeam.gamesPlayed += 1
+                }
+                var new = true
+                print(teams.count)
+                if (teams.count > 0) {
+                    for i in 0...teams.count - 1 {
+                        if (teams[i].name == tempTeam.name) {
+                            new = false
+                        }
+                    }
+                    if (new == true) {
+                        teams.append(tempTeam)
+                    }
+                } else {
                     teams.append(tempTeam)
                 }
-            } else {
-                teams.append(tempTeam)
+                if let encoded = try? JSONEncoder().encode(teams) {
+                    UserDefaults.standard.set(encoded, forKey: "teamsKey")
+                }
+            } catch {
+                
             }
-            if let encoded = try? JSONEncoder().encode(teams) {
-                UserDefaults.standard.set(encoded, forKey: "teamsKey")
-            }
-        } catch {
-            print("Error, Invalid Data")
         }
     }
+    
     
     var body: some View {
         VStack {
             NavigationView {
                 List((searchResults), id: \.self) {team in
                     NavigationLink {
-                        TeamInfo(selected: Int(team.name) ?? 0, gamesPlayed: team.gamesPlayed, average: Int(team.averagePoints)/team.gamesPlayed, points: Int(team.averagePoints), bottomAutoAveragePoints: team.autoBottomPoints/team.gamesPlayed, middleAutoAveragePoints: team.autoMiddlePoints/team.gamesPlayed, topAutoAveragePoints: team.autoTopPoints/team.gamesPlayed, bottomTeleAveragePoints: team.teleBottomPoints/team.gamesPlayed, middleTeleAveragePoints: team.teleMiddlePoints/team.gamesPlayed, topTeleAveragePoints: team.teleTopPoints/team.gamesPlayed)
+                        TeamInfo(selected: Int(team.name) ?? 0, gamesPlayed: team.gamesPlayed, bottomAutoAveragePoints: team.autoBottomPoints, middleAutoAveragePoints: team.autoMiddlePoints, topAutoAveragePoints: team.autoTopPoints, bottomTeleAveragePoints: team.teleBottomPoints, middleTeleAveragePoints: team.teleMiddlePoints, topTeleAveragePoints: team.teleTopPoints)
                     } label: {
                         Text("\(team.name)")
                     }
                 }
-                
                 .onAppear {
-                    //ADD JSON GET FROM AYMANS API
                     if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
                         let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
                         teams.removeAll()
@@ -133,7 +137,6 @@ struct Teams: View {
                 .navigationTitle("Teams")
             }
             .searchable(text: $searchText, prompt: "Enter Team Number")
-
         }
     }
 }

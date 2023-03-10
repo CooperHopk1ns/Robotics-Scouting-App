@@ -10,7 +10,6 @@ import Foundation
 struct Team: Hashable, Codable, Identifiable {
     var id: Int
     var name: String
-    var averagePoints: Double
     var gamesPlayed: Int
     //Points
     var autoBottomPoints: Int
@@ -41,4 +40,19 @@ public struct TeamJSON: Decodable {
 public struct responseJSON: Decodable {
     public let success: Bool
     public let team: TeamJSON
+}
+
+public struct pushJSON: Encodable {
+        var team: Int
+        var password: String
+        var matchNumber: Int
+        var alliance: String
+        var priorMatches: Int
+        var autoBottom: Int
+        var autoMiddle: Int
+        var autoTop: Int
+        var teleBottom: Int
+        var teleMiddle: Int
+        var teleTop: Int
+        var allianceLinks: Int
 }
