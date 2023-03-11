@@ -307,7 +307,6 @@ struct TeamInfoInput: View {
                 .frame(alignment: .top)
                 .padding([.bottom], 50)
                 .navigationTitle("New Team Data")
-                .background(Color.cyan)
             }
         }
         .onAppear {

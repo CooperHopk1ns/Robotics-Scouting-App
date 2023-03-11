@@ -56,3 +56,12 @@ public struct pushJSON: Encodable {
         var teleTop: Int
         var allianceLinks: Int
 }
+
+public struct teamsAvailStruct: Decodable {
+    public let success: Bool
+    public let array: Array<teamAvailDataStruct>
+}
+public struct teamAvailDataStruct: Decodable {
+    public let id: Int
+    public let team: String
+}

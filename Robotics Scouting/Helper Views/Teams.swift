@@ -24,28 +24,6 @@ struct Teams: View {
         }
     }
     
-    let teamJSONDict = """
-    {
-    "success":team,
-    "team": {
-            "id":3,
-            "team":"team",
-            "matchNumber":"",
-            "alliance":"",
-            "priorMatches":"0",
-            "autoBottom":"0",
-            "autoMiddle":"0",
-            "autoTop":"0",
-            "teleBottom":"0",
-            "teleMiddle":"0",
-            "teleTop":"0",
-            allianceLinks":"0",
-            "createdAt":"2023-03-08T05:02:41.107Z",
-            "updatedAt":"2023-03-08T05:02:41.107Z"
-            }
-    }
-    """.data(using: .utf8)!
-    
     struct teamJSONStruct: Decodable {
         var id: Int
         var team: String
@@ -62,14 +40,37 @@ struct Teams: View {
     }
     
     func getTeamsRequest() async {
-        for i in 0...9999 {
-            guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(i)/data") else {
+        //Teams URL
+        var availableTeams : [Int] = []
+        //Get what teams available
+        guard let availTeamsURL = URL(string: "http://api.etronicindustries.org/v1/teams") else {
+            print("Error fetching available teams")
+            return
+        }
+        do {
+            let(availTeamsData, _) = try await URLSession.shared.data(from: availTeamsURL)
+            
+            let decodedTeamsAvailData = try JSONDecoder().decode(teamsAvailStruct?.self, from: availTeamsData)
+            let arrayData = decodedTeamsAvailData?.array
+            for i in 0...arrayData!.count - 1 {
+                print(Int(arrayData![i].team)!)
+                availableTeams.append(Int(arrayData![i].team)!)
+            }
+        } catch {
+            print(error)
+        }
+        
+        
+        
+        
+        for i in 0...availableTeams.count-1 {
+            guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/data") else {
                 print("error")
                 return
             }
             do {
                 let(data, _) = try await URLSession.shared.data(from: teamsURL)
-                
+
                 guard let decodedTeamData = try JSONDecoder().decode(responseJSON?.self, from: data) else {
                     print("Error")
                     return
@@ -79,7 +80,7 @@ struct Teams: View {
                 if (points == 0) {
                     points+=1
                 }
-                var tempTeam = Team(id: decodedTeamData.team.id, name: String(decodedTeamData.team.id), gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 0, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0)
+                var tempTeam = Team(id: decodedTeamData.team.id, name: decodedTeamData.team.team, gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 0, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0)
                 if (tempTeam.gamesPlayed == 0) {
                     tempTeam.gamesPlayed += 1
                 }
@@ -101,7 +102,7 @@ struct Teams: View {
                     UserDefaults.standard.set(encoded, forKey: "teamsKey")
                 }
             } catch {
-                
+
             }
         }
     }
