@@ -165,6 +165,12 @@ struct TeamInfoInput: View {
                         Text("Points")
                             .fontWeight(.bold)
                             .font(.system(size: 20))
+                            .padding([.bottom], 2)
+                        Text("Bottom Auto is worth 3, middle auto is worth 4, and top auto is worth 5.")
+                            .font(.system(size: 13))
+                            .multilineTextAlignment(.center)
+                        Text("Tele points are the same as auto, just minus 1.")
+                            .font(.system(size: 13))
                         VStack {
                             //Bottom Auto Points Scored
                             HStack {
@@ -173,7 +179,9 @@ struct TeamInfoInput: View {
                                 } onIncrement: {
                                     bottomAutoPoints += 1
                                 } onDecrement: {
-                                    bottomAutoPoints -= 1
+                                    if (bottomAutoPoints >= 1) {
+                                        bottomAutoPoints -= 1
+                                    }
                                 }
                                 .padding([.leading, .trailing], screenWidth/6)
                             }
@@ -185,7 +193,9 @@ struct TeamInfoInput: View {
                                 } onIncrement: {
                                     middleAutoPoints += 1
                                 } onDecrement: {
-                                    bottomAutoPoints -= 1
+                                    if (middleAutoPoints >= 1) {
+                                        middleAutoPoints -= 1
+                                    }
                                 }
                                 .padding([.leading, .trailing], screenWidth/6)
                             }
@@ -196,7 +206,9 @@ struct TeamInfoInput: View {
                                 } onIncrement: {
                                     topAutoPoints += 1
                                 } onDecrement: {
-                                    topAutoPoints -= 1
+                                    if (topAutoPoints >= 1) {
+                                        topAutoPoints -= 1
+                                    }
                                 }
                                 .padding([.leading, .trailing], screenWidth/6)
                             }
@@ -209,7 +221,9 @@ struct TeamInfoInput: View {
                                 } onIncrement: {
                                     bottomTelePoints += 1
                                 } onDecrement: {
-                                    bottomTelePoints -= 1
+                                    if (bottomTelePoints >= 1) {
+                                        bottomTelePoints -= 1
+                                    }
                                 }
                                 .padding([.leading, .trailing], screenWidth/6)
                             }
@@ -275,18 +289,18 @@ struct TeamInfoInput: View {
                                     }
                                 }
                             } else {
-                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
+                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
                             }
                             //Append
                             print(new)
                             if (new == true) {
                                 print(count)
-                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
+                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
                                     print("its new")
                             } else {
                                 let tempTeam = teams[location]
                                 teams.remove(at: location)
-                                teams.insert(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, autoBottomPoints: tempTeam.autoBottomPoints + bottomAutoPoints, autoMiddlePoints: tempTeam.autoMiddlePoints + middleAutoPoints, autoTopPoints: tempTeam.autoTopPoints + topAutoPoints, teleBottomPoints: tempTeam.teleBottomPoints + bottomTelePoints, teleMiddlePoints: tempTeam.teleMiddlePoints + middleTelePoints, teleTopPoints: tempTeam.teleTopPoints + topTelePoints), at: location)
+                                teams.insert(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: tempTeam.autoBottomPoints + bottomAutoPoints, autoMiddlePoints: tempTeam.autoMiddlePoints + middleAutoPoints, autoTopPoints: tempTeam.autoTopPoints + topAutoPoints, teleBottomPoints: tempTeam.teleBottomPoints + bottomTelePoints, teleMiddlePoints: tempTeam.teleMiddlePoints + middleTelePoints, teleTopPoints: tempTeam.teleTopPoints + topTelePoints), at: location)
                             }
                             if let encoded = try? JSONEncoder().encode(teams) {
                                 UserDefaults.standard.set(encoded, forKey: "teamsKey")
@@ -305,7 +319,7 @@ struct TeamInfoInput: View {
                     }
                 }
                 .frame(alignment: .top)
-                .padding([.bottom], 50)
+                .padding([.bottom], 20)
                 .navigationTitle("New Team Data")
             }
         }

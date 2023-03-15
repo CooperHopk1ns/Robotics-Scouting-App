@@ -12,6 +12,7 @@ struct Team: Hashable, Codable, Identifiable {
     var name: String
     var gamesPlayed: Int
     //Points
+    var totalPoints: Int
     var autoBottomPoints: Int
     var autoMiddlePoints: Int
     var autoTopPoints: Int

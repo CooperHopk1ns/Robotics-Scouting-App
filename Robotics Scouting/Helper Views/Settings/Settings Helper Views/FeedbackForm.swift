@@ -34,10 +34,11 @@ struct FeedbackForm: View {
                     .padding([.bottom], 20)
                     //Body Text
                     Text("Enter Feedback Here")
+                    //FIX TO BE ABLE TO WORK WITH LOWER LEVEL IOS
                     TextField (
                         "Feedback",
-                        text: $feedback,
-                        axis: .vertical
+                        text: $feedback
+                        //axis: .vertical
                     )
                     .padding([.trailing, .leading], 40)
                     .padding([.bottom], 20)

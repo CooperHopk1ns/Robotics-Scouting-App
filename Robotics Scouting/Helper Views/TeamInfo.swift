@@ -28,8 +28,6 @@ struct TeamInfo: View {
                     .font(.system(size: 30))
                     .fontWeight(.bold)
                     .padding()
-                Text("Team Number \(String(selected))")
-                    .padding()
                 Text("Games Played: \(gamesPlayed)")
                     .padding()
                 //Points Info
