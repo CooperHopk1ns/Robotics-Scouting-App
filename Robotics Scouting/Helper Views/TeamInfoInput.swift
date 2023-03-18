@@ -23,6 +23,14 @@ struct TeamInfoInput: View {
     @State var matchNumber = 0
     @State var amtOfGames = 0
     @State var teams : [Team] = []
+    @State var autoChargeEngaged = false
+    @State var autoChargeNotEngaged = false
+    @State var teleChargeEngaged = false
+    @State var teleChargeNotEngaged = false
+    @State var mobilityBonus = false
+    @State var parkingBonus = false
+    @State var rankingPoints = 0
+    @State var notes = ""
     //Points Var
     //CHANGE ALL TO DOUBLES WITH LIMIT OF 3 DECIMALS
     @State var pointsScored = 0
@@ -134,128 +142,204 @@ struct TeamInfoInput: View {
                         }
                         .padding()
                     }
-                    //Games Played
-                    HStack {
-                        Text("Games Played:")
-                        TextField (
-                            "Games Played",
-                            value: $amtOfGames,
-                            formatter: NumberFormatter()
-                        )
-                        .textFieldStyle(.roundedBorder)
-                        .keyboardType(.numbersAndPunctuation)
-                        .focused($isFocused)
-                    }
-                    .padding()
                     //Alliance Links
                     HStack {
-                        Text("Alliance Links")
-                        TextField (
-                                "Alliance Links",
-                                value: $allianceLinks,
-                                formatter: NumberFormatter()
-                        )
-                        .textFieldStyle(.roundedBorder)
-                        .keyboardType(.numbersAndPunctuation)
-                        .focused($isFocused)
+                        Stepper {
+                            Text("Alliance Links: \(allianceLinks)")
+                        } onIncrement: {
+                            if (allianceLinks <= 8) {
+                                allianceLinks += 1
+                            }
+                        } onDecrement: {
+                            if (allianceLinks >= 1) {
+                                allianceLinks -= 1
+                            }
+                        }
                     }
                     .padding()
                     //Points
-                    VStack {
-                        Text("Points")
-                            .fontWeight(.bold)
-                            .font(.system(size: 20))
-                            .padding([.bottom], 2)
-                        Text("Bottom Auto is worth 3, middle auto is worth 4, and top auto is worth 5.")
-                            .font(.system(size: 13))
-                            .multilineTextAlignment(.center)
-                        Text("Tele points are the same as auto, just minus 1.")
-                            .font(.system(size: 13))
                         VStack {
-                            //Bottom Auto Points Scored
-                            HStack {
+                            Text("Points")
+                                .fontWeight(.bold)
+                                .font(.system(size: 20))
+                                .padding([.bottom], 2)
+                            Text("Enter Pieces Scored")
+                                .font(.system(size: 13))
+                            VStack {
+                                //Ranking Points Scored
+                                //Add Calculating Based On Others
                                 Stepper {
-                                    Text("Bottom Auto: \(bottomAutoPoints)")
+                                    Text("Ranking Points: \(rankingPoints)")
                                 } onIncrement: {
-                                    bottomAutoPoints += 1
+                                    if (rankingPoints <= 3) {
+                                        rankingPoints += 1
+                                    }
                                 } onDecrement: {
-                                    if (bottomAutoPoints >= 1) {
-                                        bottomAutoPoints -= 1
+                                    if (rankingPoints >= 1) {
+                                        rankingPoints -= 1
                                     }
                                 }
                                 .padding([.leading, .trailing], screenWidth/6)
                             }
-                            .padding([.top, .bottom], 8)
-                            //Middle Auto Points Scored
-                            HStack {
-                                Stepper {
-                                    Text("Middle Auto: \(middleAutoPoints)")
-                                } onIncrement: {
-                                    middleAutoPoints += 1
-                                } onDecrement: {
-                                    if (middleAutoPoints >= 1) {
-                                        middleAutoPoints -= 1
+                            VStack {
+                                //Bottom Auto Points Scored
+                                HStack {
+                                    Stepper {
+                                        Text("Bottom Auto: \(bottomAutoPoints)")
+                                    } onIncrement: {
+                                        bottomAutoPoints += 1
+                                    } onDecrement: {
+                                        if (bottomAutoPoints >= 1) {
+                                            bottomAutoPoints -= 1
+                                        }
                                     }
+                                    .padding([.leading, .trailing], screenWidth/6)
                                 }
-                                .padding([.leading, .trailing], screenWidth/6)
+                                .padding([.top, .bottom], 8)
+                                //Middle Auto Points Scored
+                                HStack {
+                                    Stepper {
+                                        Text("Middle Auto: \(middleAutoPoints)")
+                                    } onIncrement: {
+                                        middleAutoPoints += 1
+                                    } onDecrement: {
+                                        if (middleAutoPoints >= 1) {
+                                            middleAutoPoints -= 1
+                                        }
+                                    }
+                                    .padding([.leading, .trailing], screenWidth/6)
+                                }
+                                //Top Auto Points Scored
+                                HStack {
+                                    Stepper {
+                                        Text("Top Auto: \(topAutoPoints)")
+                                    } onIncrement: {
+                                        topAutoPoints += 1
+                                    } onDecrement: {
+                                        if (topAutoPoints >= 1) {
+                                            topAutoPoints -= 1
+                                        }
+                                    }
+                                    .padding([.leading, .trailing], screenWidth/6)
+                                }
                             }
-                            //Top Auto Points Scored
-                            HStack {
-                                Stepper {
-                                    Text("Top Auto: \(topAutoPoints)")
-                                } onIncrement: {
-                                    topAutoPoints += 1
-                                } onDecrement: {
-                                    if (topAutoPoints >= 1) {
-                                        topAutoPoints -= 1
+                            VStack {
+                                //Bottom Tele Points Scored
+                                HStack {
+                                    Stepper {
+                                        Text("Bottom Tele: \(bottomTelePoints)")
+                                    } onIncrement: {
+                                        bottomTelePoints += 1
+                                    } onDecrement: {
+                                        if (bottomTelePoints >= 1) {
+                                            bottomTelePoints -= 1
+                                        }
                                     }
+                                    .padding([.leading, .trailing], screenWidth/6)
                                 }
-                                .padding([.leading, .trailing], screenWidth/6)
+                                //Middle Tele Points Scored
+                                HStack {
+                                    Stepper {
+                                        Text("Middle Tele: \(middleTelePoints)")
+                                    } onIncrement: {
+                                        middleTelePoints += 1
+                                    } onDecrement: {
+                                        if (middleTelePoints >= 1) {
+                                            middleTelePoints -= 1
+                                        }
+                                    }
+                                    .padding([.leading, .trailing], screenWidth/6)
+                                }
+                                //Top Tele Points Scored
+                                HStack {
+                                    Stepper {
+                                        Text("Top Tele: \(topTelePoints)")
+                                    } onIncrement: {
+                                        topTelePoints += 1
+                                    } onDecrement: {
+                                        if (topTelePoints >= 1) {
+                                            topTelePoints -= 1
+                                        }
+                                    }
+                                    .padding([.leading, .trailing], screenWidth/6)
+                                }
+                            }
+                            //Other Points
+                            VStack {
+                                Text("Other Points")
+                                    .font(.system(size: 17))
+                                    .fontWeight(.bold)
+                            }
+                            //Mobility Check
+                            VStack {
+                                    HStack {
+                                        Text("Got Mobility Points")
+                                        Spacer()
+                                        checkbox(checked: $mobilityBonus)
+                                    }
+                                    .padding([.leading, .trailing], 68)
+                                }
+                                .padding([.top], 1)
+                            }
+                            .padding([.top], 5)
+                    //Parking Check
+                        VStack {
+                            HStack {
+                                Text("Got Parking Bonus")
+                                //ADD CHECK SO NOT SELECTED IF CHARGE IS SELECTED
+                                Spacer()
+                                checkbox(checked: $parkingBonus)
+                            }
+                            .padding([.leading, .trailing], 68)
+                        }
+                        .padding([.top], 1)
+                    //Charging Check
+
+                    VStack {
+                        Text("Charge Points")
+                            .font(.system(size: 17))
+                            .fontWeight(.bold)
+                            .padding([.bottom], 2)
+                        VStack {
+                            HStack {
+                                Text("Got Auto Charge Not Engaged")
+                                Spacer()
+                                checkbox(checked: $autoChargeNotEngaged)
+                            }
+                            .padding([.bottom], 1)
+                            HStack {
+                                Text("Got Auto Charge Engaged")
+                                Spacer()
+                                checkbox(checked: $autoChargeEngaged)
                             }
                         }
+                        .padding([.bottom], 10)
                         VStack {
-                            //Bottom Tele Points Scored
                             HStack {
-                                Stepper {
-                                    Text("Bottom Tele: \(bottomTelePoints)")
-                                } onIncrement: {
-                                    bottomTelePoints += 1
-                                } onDecrement: {
-                                    if (bottomTelePoints >= 1) {
-                                        bottomTelePoints -= 1
-                                    }
-                                }
-                                .padding([.leading, .trailing], screenWidth/6)
+                                Text("Got Tele Charge Not Engaged")
+                                Spacer()
+                                checkbox(checked: $teleChargeNotEngaged)
                             }
-                            //Middle Tele Points Scored
+                            .padding([.bottom], 1)
                             HStack {
-                                Stepper {
-                                    Text("Middle Tele: \(middleTelePoints)")
-                                } onIncrement: {
-                                    middleTelePoints += 1
-                                } onDecrement: {
-                                    if (middleTelePoints >= 1) {
-                                        middleTelePoints -= 1
-                                    }
-                                }
-                                .padding([.leading, .trailing], screenWidth/6)
-                            }
-                            //Top Tele Points Scored
-                            HStack {
-                                Stepper {
-                                    Text("Top Tele: \(topTelePoints)")
-                                } onIncrement: {
-                                    topTelePoints += 1
-                                } onDecrement: {
-                                    if (topTelePoints >= 1) {
-                                        topTelePoints -= 1
-                                    }
-                                }
-                                .padding([.leading, .trailing], screenWidth/6)
+                                Text("Got Tele Charge Engaged")
+                                Spacer()
+                                checkbox(checked: $teleChargeEngaged)
                             }
                         }
                     }
+                    .padding([.leading, .trailing], 50)
                     .padding()
+                //Quick Notes
+                    VStack {
+                        TextField (
+                            "Any Quick Notes?",
+                            text: $notes
+                        )
+                        .padding([.leading, .trailing], 75)
+                        .textFieldStyle(.roundedBorder)
+                        .keyboardType(.default)
+                    }
                     //Enter
                     Button("Enter") {
                         //ADD ON ENTER SWITCHING VIEWS
@@ -289,18 +373,18 @@ struct TeamInfoInput: View {
                                     }
                                 }
                             } else {
-                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
+                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: 0, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
                             }
                             //Append
                             print(new)
                             if (new == true) {
                                 print(count)
-                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
+                                teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: 0, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints))
                                     print("its new")
                             } else {
                                 let tempTeam = teams[location]
                                 teams.remove(at: location)
-                                teams.insert(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: amtOfGames, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: tempTeam.autoBottomPoints + bottomAutoPoints, autoMiddlePoints: tempTeam.autoMiddlePoints + middleAutoPoints, autoTopPoints: tempTeam.autoTopPoints + topAutoPoints, teleBottomPoints: tempTeam.teleBottomPoints + bottomTelePoints, teleMiddlePoints: tempTeam.teleMiddlePoints + middleTelePoints, teleTopPoints: tempTeam.teleTopPoints + topTelePoints), at: location)
+                                teams.insert(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: tempTeam.gamesPlayed, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: tempTeam.autoBottomPoints + bottomAutoPoints, autoMiddlePoints: tempTeam.autoMiddlePoints + middleAutoPoints, autoTopPoints: tempTeam.autoTopPoints + topAutoPoints, teleBottomPoints: tempTeam.teleBottomPoints + bottomTelePoints, teleMiddlePoints: tempTeam.teleMiddlePoints + middleTelePoints, teleTopPoints: tempTeam.teleTopPoints + topTelePoints), at: location)
                             }
                             if let encoded = try? JSONEncoder().encode(teams) {
                                 UserDefaults.standard.set(encoded, forKey: "teamsKey")
