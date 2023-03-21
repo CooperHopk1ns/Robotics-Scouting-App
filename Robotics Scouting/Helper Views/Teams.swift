@@ -18,6 +18,7 @@ struct Teams: View {
     @State var minPoints = 0
     @State var minAutoPoints = 0.0
     @State var minTelePionts = 0.0
+    @State var sortBy = "";
     
     var searchResults: [Team] {
         if searchText.isEmpty {
@@ -34,6 +35,7 @@ struct Teams: View {
         higherToLowerTeams = teams.sorted {$0.totalPoints > $1.totalPoints}
         print("Teams are \(higherToLowerTeams)")
         teams = higherToLowerTeams
+        sortBy = "higherToLowerPoints"
     }
     @State var lowerToHigherTeams : [Team] = []
     func filterLowerToHigherPoints() {
@@ -41,6 +43,7 @@ struct Teams: View {
         print(lowerToHigherTeams)
         print("Lower To Higher Teams are \(lowerToHigherTeams)")
         teams = lowerToHigherTeams
+        sortBy = "lowerToHigherPoints"
     }
     @State var higherToLowerAutoTeams : [Team] = []
     func filterHigherToLowerAutoPoints() {
@@ -48,6 +51,7 @@ struct Teams: View {
         print(higherToLowerAutoTeams)
         print("Higher To Lower Auto Teams are \(higherToLowerAutoTeams)")
         teams = higherToLowerAutoTeams
+        sortBy = "higherToLowerAutoPoints"
     }
     @State var lowerToHigherAutoTeams : [Team] = []
     func filterLowerToHigherAutoPoints() {
@@ -55,6 +59,7 @@ struct Teams: View {
         print(lowerToHigherAutoTeams)
         print("Lower To Higher Auto Teams are \(lowerToHigherAutoTeams)")
         teams = lowerToHigherAutoTeams
+        sortBy = "lowerToHigherAutoPoints"
     }
     @State var higherToLowerTeleTeams : [Team] = []
     func filterHigherToLowerTelePoints() {
@@ -62,6 +67,7 @@ struct Teams: View {
         print(higherToLowerTeleTeams)
         print("Higher To Lower Tele Teams are \(higherToLowerTeleTeams)")
         teams = higherToLowerTeleTeams
+        sortBy = "higherToLowerTelePoints"
     }
     @State var lowerToHigherTeleTeams : [Team] = []
     func filterLowerToHigherTelePoints() {
@@ -69,6 +75,7 @@ struct Teams: View {
         print(lowerToHigherTeleTeams)
         print("Lower To Higher Tele Teams are \(lowerToHigherTeleTeams)")
         teams = lowerToHigherTeleTeams
+        sortBy = "lowerToHigherTelePoints"
     }
     
     func applyFilters() {
@@ -227,6 +234,23 @@ struct Teams: View {
                         }
                         //Apply Filters
                         applyFilters()
+                        //Apply Sorting
+                        switch sortBy {
+                        case "higherToLowerPoints":
+                            filterHigherToLowerPoints()
+                        case "lowerToHigherPoints":
+                            filterLowerToHigherPoints()
+                        case "higherToLowerAutoPoints":
+                            filterHigherToLowerAutoPoints()
+                        case "lowerToHigherAutoPoints":
+                            filterLowerToHigherAutoPoints()
+                        case "higherToLowerTelePoints":
+                            filterHigherToLowerTelePoints()
+                        case "lowerToHigherTelePoints":
+                            filterLowerToHigherTelePoints()
+                        default :
+                            print("no filter applied")
+                        }
                     }
                     .refreshable {
                         await getTeamsRequest()

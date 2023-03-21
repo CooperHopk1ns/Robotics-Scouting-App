@@ -158,112 +158,8 @@ struct TeamInfoInput: View {
                     }
                     .padding()
                     //Points
-                        VStack {
-                            Text("Points")
-                                .fontWeight(.bold)
-                                .font(.system(size: 20))
-                                .padding([.bottom], 2)
-                            Text("Enter Pieces Scored")
-                                .font(.system(size: 13))
-                            VStack {
-                                //Ranking Points Scored
-                                //Add Calculating Based On Others
-                                Stepper {
-                                    Text("Ranking Points: \(rankingPoints)")
-                                } onIncrement: {
-                                    if (rankingPoints <= 3) {
-                                        rankingPoints += 1
-                                    }
-                                } onDecrement: {
-                                    if (rankingPoints >= 1) {
-                                        rankingPoints -= 1
-                                    }
-                                }
-                                .padding([.leading, .trailing], screenWidth/6)
-                            }
-                            VStack {
-                                //Bottom Auto Points Scored
-                                HStack {
-                                    Stepper {
-                                        Text("Bottom Auto: \(bottomAutoPoints)")
-                                    } onIncrement: {
-                                        bottomAutoPoints += 1
-                                    } onDecrement: {
-                                        if (bottomAutoPoints >= 1) {
-                                            bottomAutoPoints -= 1
-                                        }
-                                    }
-                                    .padding([.leading, .trailing], screenWidth/6)
-                                }
-                                .padding([.top, .bottom], 8)
-                                //Middle Auto Points Scored
-                                HStack {
-                                    Stepper {
-                                        Text("Middle Auto: \(middleAutoPoints)")
-                                    } onIncrement: {
-                                        middleAutoPoints += 1
-                                    } onDecrement: {
-                                        if (middleAutoPoints >= 1) {
-                                            middleAutoPoints -= 1
-                                        }
-                                    }
-                                    .padding([.leading, .trailing], screenWidth/6)
-                                }
-                                //Top Auto Points Scored
-                                HStack {
-                                    Stepper {
-                                        Text("Top Auto: \(topAutoPoints)")
-                                    } onIncrement: {
-                                        topAutoPoints += 1
-                                    } onDecrement: {
-                                        if (topAutoPoints >= 1) {
-                                            topAutoPoints -= 1
-                                        }
-                                    }
-                                    .padding([.leading, .trailing], screenWidth/6)
-                                }
-                            }
-                            VStack {
-                                //Bottom Tele Points Scored
-                                HStack {
-                                    Stepper {
-                                        Text("Bottom Tele: \(bottomTelePoints)")
-                                    } onIncrement: {
-                                        bottomTelePoints += 1
-                                    } onDecrement: {
-                                        if (bottomTelePoints >= 1) {
-                                            bottomTelePoints -= 1
-                                        }
-                                    }
-                                    .padding([.leading, .trailing], screenWidth/6)
-                                }
-                                //Middle Tele Points Scored
-                                HStack {
-                                    Stepper {
-                                        Text("Middle Tele: \(middleTelePoints)")
-                                    } onIncrement: {
-                                        middleTelePoints += 1
-                                    } onDecrement: {
-                                        if (middleTelePoints >= 1) {
-                                            middleTelePoints -= 1
-                                        }
-                                    }
-                                    .padding([.leading, .trailing], screenWidth/6)
-                                }
-                                //Top Tele Points Scored
-                                HStack {
-                                    Stepper {
-                                        Text("Top Tele: \(topTelePoints)")
-                                    } onIncrement: {
-                                        topTelePoints += 1
-                                    } onDecrement: {
-                                        if (topTelePoints >= 1) {
-                                            topTelePoints -= 1
-                                        }
-                                    }
-                                    .padding([.leading, .trailing], screenWidth/6)
-                                }
-                            }
+                    VStack {
+                        InputPointsView()
                             //Other Points
                             VStack {
                                 Text("Other Points")
@@ -294,7 +190,6 @@ struct TeamInfoInput: View {
                         }
                         .padding([.top], 1)
                     //Charging Check
-
                     VStack {
                         Text("Charge Points")
                             .font(.system(size: 17))
@@ -343,7 +238,7 @@ struct TeamInfoInput: View {
                     //Enter
                     Button("Enter") {
                         //ADD ON ENTER SWITCHING VIEWS
-                        //Add Standard Input Logic Checking
+                        //Add Standard Input Logic Checking // For Parking, if got parking then charge cannot be selected and vice versa
                         if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
                             let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
                             teams.removeAll()
