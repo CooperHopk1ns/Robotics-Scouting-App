@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SystemConfiguration
 
 struct Teams: View {
     
     @State var teams : [Team] = []
     @State private var showingFilterPage = false
-    var testTeam = Team.init(id: 3082, name: "3082", gamesPlayed: 4, totalPoints: 24, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12)
+    var testTeam = Team.init(id: 3082, name: "3082", gamesPlayed: 4, totalPoints: 24, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12, autoCharged: 1, teleCharged: 1, engagement: 1, mobilityPoints: 1, parkingPoints: 1, rankingPoints: 3)
     @State var searchText = ""
     var filterHigherToLower = false
     @State var displayTeams : [Team] = []
@@ -19,7 +20,39 @@ struct Teams: View {
     @State var minAutoPoints = 0.0
     @State var minTelePionts = 0.0
     @State var sortBy = "";
+    @State var hasInternet = true;
     
+    //Check For Internet Connection
+    func checkInternet() {
+        guard let googleURL = URL(string: "https://www.google.com") else {
+            print("NO INTERNET")
+            hasInternet = false
+            return
+        }
+        URLSession.shared.dataTask(with: googleURL) { (data, response, error) in
+                if let error = error {
+                    print("Error checking internet connection: \(error.localizedDescription)")
+                    hasInternet = false
+                    return
+                }
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    hasInternet = false
+                    return
+                }
+            print(httpResponse.statusCode)
+            if (httpResponse.statusCode == 200) {
+                hasInternet = true;
+                return
+            }
+        }
+        print(hasInternet)
+    }
+    //Initialize
+    init() {
+        checkInternet()
+        filterHigherToLowerTeamNumbers()
+    }
+    //Search and Filters
     var searchResults: [Team] {
         if searchText.isEmpty {
             return teams
@@ -77,6 +110,18 @@ struct Teams: View {
         teams = lowerToHigherTeleTeams
         sortBy = "lowerToHigherTelePoints"
     }
+    @State var higherToLowerTeamNumbers : [Team] = []
+    func filterHigherToLowerTeamNumbers() {
+        higherToLowerTeamNumbers = teams.sorted { $0.name < $1.name}
+        teams = higherToLowerTeamNumbers
+        sortBy = "higherToLowerTeamNumbers"
+    }
+    @State var lowerToHigherTeamNumbers : [Team] = []
+    func filterLowerToHigherTeamNumbers() {
+        lowerToHigherTeamNumbers = teams.sorted { $0.name > $1.name}
+        teams = lowerToHigherTeamNumbers
+        sortBy = "lowerToHigherTeamNumbers"
+    }
     
     func applyFilters() {
         //Decode
@@ -110,22 +155,6 @@ struct Teams: View {
         }
     }
     
-    
-    struct teamJSONStruct: Decodable {
-        var id: Int
-        var team: String
-        var matchNumber: Int
-        var alliance: String
-        var priorMatches: Int
-        var autoBottom: Int
-        var autoMiddle: Int
-        var autoTop: Int
-        var teleBottom: Int
-        var teleMiddle: Int
-        var teleTop: Int
-        var allianceLinks: Int
-    }
-    
     func getTeamsRequest() async {
         //Teams URL
         var availableTeams : [Int] = []
@@ -140,8 +169,8 @@ struct Teams: View {
             let decodedTeamsAvailData = try JSONDecoder().decode(teamsAvailStruct?.self, from: availTeamsData)
             let arrayData = decodedTeamsAvailData?.array
             for i in 0...arrayData!.count - 1 {
-                print(Int(arrayData![i].team)!)
-                availableTeams.append(Int(arrayData![i].team)!)
+                print(Int(arrayData![i].team))
+                availableTeams.append(Int(arrayData![i].team) ?? 0)
             }
         } catch {
             print(error)
@@ -162,7 +191,7 @@ struct Teams: View {
                 print("Data is \(decodedTeamData)")
                 let totalPoints = Int(decodedTeamData.team.autoBottom)! + Int(decodedTeamData.team.autoMiddle)! + Int(decodedTeamData.team.autoTop)! + Int(decodedTeamData.team.teleBottom)! + Int(decodedTeamData.team.teleMiddle)! + Int(decodedTeamData.team.teleTop)!
                 print("Total Points IS \(totalPoints)")
-                var tempTeam = Team(id: decodedTeamData.team.id, name: decodedTeamData.team.team, gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 0, totalPoints: totalPoints, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0)
+                var tempTeam = Team(id: decodedTeamData.team.id, name: decodedTeamData.team.team, gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 1, totalPoints: totalPoints, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0, autoCharged: Int(decodedTeamData.team.autoCharged) ?? 0, teleCharged: Int(decodedTeamData.team.teleCharged) ?? 0, engagement: Int(decodedTeamData.team.engagement) ?? 0, mobilityPoints: Int(decodedTeamData.team.mobilityPoints) ?? 0, parkingPoints: Int(decodedTeamData.team.parkingPoints) ?? 0, rankingPoints: Int(decodedTeamData.team.rankingPoints) ?? 0)
                 if (tempTeam.gamesPlayed == 0) {
                     tempTeam.gamesPlayed += 1
                 }
@@ -207,6 +236,8 @@ struct Teams: View {
                             Button("Lower To Higher Auto", action: filterLowerToHigherAutoPoints)
                             Button("Higher To Lower Tele", action: filterHigherToLowerTelePoints)
                             Button("Lower To Higher Tele", action: filterLowerToHigherTelePoints)
+                            Button("Higher To Lower Team Numbers", action: filterHigherToLowerTeamNumbers)
+                            Button("Lower To Higher Team Numbers", action: filterLowerToHigherTeamNumbers)
                         }
                         .frame(width: UIScreen.main.bounds.width/2)
                     }
@@ -248,6 +279,10 @@ struct Teams: View {
                             filterHigherToLowerTelePoints()
                         case "lowerToHigherTelePoints":
                             filterLowerToHigherTelePoints()
+                        case "higherToLowerTeamNumbers":
+                            filterHigherToLowerTeamNumbers()
+                        case "lowerToHigherTeamNumbers":
+                            filterLowerToHigherTeamNumbers()
                         default :
                             print("no filter applied")
                         }

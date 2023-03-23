@@ -19,6 +19,12 @@ struct Team: Hashable, Codable, Identifiable {
     var teleBottomPoints: Int
     var teleMiddlePoints: Int
     var teleTopPoints: Int
+    var autoCharged: Int
+    var teleCharged: Int
+    var engagement: Int
+    var mobilityPoints: Int
+    var parkingPoints: Int
+    var rankingPoints: Int
 }
 
 public struct TeamJSON: Decodable {
@@ -34,6 +40,12 @@ public struct TeamJSON: Decodable {
     public let teleMiddle: String
     public let teleTop: String
     public let allianceLinks: String
+    public let autoCharged: String
+    public let teleCharged: String
+    public let engagement: String
+    public let mobilityPoints: String
+    public let parkingPoints: String
+    public let rankingPoints: String
     public let createdAt: String
     public let updatedAt: String
 }
@@ -56,6 +68,12 @@ public struct pushJSON: Encodable {
         var teleMiddle: Int
         var teleTop: Int
         var allianceLinks: Int
+        var autoCharged: Int
+        var teleCharged: Int
+        var engagement: Int
+        var mobilityPoints: Int
+        var parkingPoints: Int
+        var rankingPoints: Int
 }
 
 public struct teamsAvailStruct: Decodable {

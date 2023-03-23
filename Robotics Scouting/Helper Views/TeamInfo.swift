@@ -22,35 +22,60 @@ struct TeamInfo: View {
     var topTeleAveragePoints = 0
     
     var body: some View {
-        NavigationView {
+        ScrollView {
+            Text("Team \(String(selected))")
+                .fontWeight(.bold)
+                .font(.system(size: 20))
+                .padding()
             VStack {
-                Text("Team \(String(selected))")
-                    .font(.system(size: 30))
-                    .fontWeight(.bold)
-                    .padding()
-                Text("Games Played: \(gamesPlayed)")
-                    .padding()
-                //Points Info
-                Text("Points")
-                    .font(.system(size: 20))
-                    .fontWeight(.bold)
                 VStack {
-                    Text("Average Bottom Auto: \(bottomAutoAveragePoints)")
-                        .padding([.top, .bottom], 5)
-                    Text("Average Middle Auto: \(middleAutoAveragePoints)")
-                        .padding([.top, .bottom], 5)
-                    Text("Average Top Auto: \(topAutoAveragePoints)")
-                        .padding([.top, .bottom], 5)
-                    Text("Average Bottom Tele: \(bottomTeleAveragePoints)")
-                        .padding([.top, .bottom], 5)
-                    Text("Average Middle Tele: \(middleTeleAveragePoints)")
-                        .padding([.top, .bottom], 5)
-                    Text("Average Top Tele: \(topTeleAveragePoints)")
-                        .padding([.top, .bottom], 5)
+                    Text("Team \(String(selected)) vs Average Team")
+                    ChartView(name: selected)
+                        .frame(width: UIScreen.main.bounds.width - 10, height: 250)
                 }
-                
+                VStack {
+                    Text("Games Played: \(gamesPlayed)")
+                        .padding()
+                    //Points Info
+                    VStack {
+                        Text("Auto Points")
+                            .fontWeight(.bold)
+                            .font(.system(size: 18))
+                            .padding([.top], 5)
+                        VStack {
+                            Text("Average Bottom Auto: \(bottomAutoAveragePoints)")
+                                .padding([.top, .bottom], 5)
+                            Text("Average Middle Auto: \(middleAutoAveragePoints)")
+                                .padding([.top, .bottom], 5)
+                            Text("Average Top Auto: \(topAutoAveragePoints)")
+                                .padding([.top, .bottom], 5)
+                        }
+                        .frame(width: UIScreen.main.bounds.width/1.75)
+                        .overlay (
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(.black, lineWidth: 2)
+                        )
+                        Text("Tele Points")
+                            .fontWeight(.bold)
+                            .font(.system(size: 18))
+                            .padding([.top], 5)
+                        VStack {
+                            Text("Average Bottom Tele: \(bottomTeleAveragePoints)")
+                                .padding([.top, .bottom], 5)
+                            Text("Average Middle Tele: \(middleTeleAveragePoints)")
+                                .padding([.top, .bottom], 5)
+                            Text("Average Top Tele: \(topTeleAveragePoints)")
+                                .padding([.top, .bottom], 5)
+                        }
+                        .frame(width: UIScreen.main.bounds.width/1.75)
+                        .overlay (
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(.black, lineWidth: 2)
+                        )
+                    }
+                    .padding([.bottom], 30)
+                }
             }
-            .frame(height:  600, alignment: .top)
         }
     }
 }

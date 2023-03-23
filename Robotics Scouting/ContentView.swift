@@ -14,11 +14,11 @@ struct ContentView: View {
             TabView {
                 Teams()
                     .tabItem {
-                        Label("Teams", systemImage: "list.clipboard.fill")
+                        Label("Teams", systemImage: "person.3")
                     }
                 TeamInfoInput()
                     .tabItem {
-                        Label("Input", systemImage: "square.and.pencil")
+                        Label("Input", systemImage: "plus.square")
                     }
                 Settings()
                     .tabItem{
