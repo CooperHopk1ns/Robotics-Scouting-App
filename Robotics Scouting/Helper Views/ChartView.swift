@@ -38,7 +38,7 @@ struct ChartView: View {
     }
     
     //Set Teams Data var
-    @State var count = 1
+    @State var count = 0
     @State var averagePoints = 0
     @State var averageAutoBottomPoints = 0
     @State var averageAutoMiddlePoints = 0
@@ -55,11 +55,8 @@ struct ChartView: View {
     
     func assignTeamsData() {
         
-        
+        count = teams.count
         for i in 0...teams.count-1 {
-            print("teams \(teams.count)")
-            print("Count \(count)")
-            count += 1
             averagePoints += teams[i].totalPoints
             averageAutoBottomPoints += teams[i].autoBottomPoints
             averageAutoMiddlePoints += teams[i].autoMiddlePoints
@@ -97,18 +94,18 @@ struct ChartView: View {
     var body: some View {
         VStack {
             //Chart Selector
-            Picker("Chart Type", selection: $selectedChartView) {
-                ForEach(chartViews, id: \.self) { chart in
-                        Text(chart.capitalized)
-                    }
-            }
-            .pickerStyle(.segmented)
-            .padding([.leading, .trailing], 10)
-            .padding([.bottom])
-            .onChange(of: chartViews) { view in
-                yValueText = "Auto Points"
-                yValue = 12
-            }
+//            Picker("Chart Type", selection: $selectedChartView) {
+//                ForEach(chartViews, id: \.self) { chart in
+//                        Text(chart.capitalized)
+//                    }
+//            }
+//            .pickerStyle(.segmented)
+//            .padding([.leading, .trailing], 10)
+//            .padding([.bottom])
+//            .onChange(of: chartViews) { view in
+//                yValueText = "Auto Points"
+//                yValue = 12
+//            }
             //Chart View
             if #available(iOS 16.0, *) {
                 Chart {
