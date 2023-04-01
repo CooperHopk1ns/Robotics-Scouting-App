@@ -84,3 +84,34 @@ public struct teamAvailDataStruct: Decodable {
     public let id: Int
     public let team: String
 }
+
+public struct AverageDataStruct: Decodable {
+    var success: Bool
+    var objectJSON: AverageDataTeamStruct
+}
+
+public struct AverageDataTeamStruct: Decodable, Hashable, Encodable {
+        public let team: String
+        public let matchNumber: String
+        public let alliance: String
+        public let autoBottom: Double
+        public let autoMiddle: Double
+        public let autoTop: Double
+        public let teleBottom: Double
+        public let teleMiddle: Double
+        public let teleTop: Double
+        public let allianceLinks: Double
+        public let autoCharged: Double
+        public let teleCharged: Double
+        public let engagement: Double
+        public let mobilityPoints: Double
+        public let parkingPoints: Double
+        public let rankingPoints: Double
+}
+
+public struct AverageTeamStruct: Hashable, Codable, Identifiable {
+    public var id: Int
+    var name: String
+    var totalPoints: Double
+    var obj: AverageDataTeamStruct
+}

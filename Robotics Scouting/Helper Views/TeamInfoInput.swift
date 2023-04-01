@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct TeamInfoInput: View {
-    
     //Basic Variables
     @State var screenWidth = UIScreen.main.bounds.width
     @State var new = true
@@ -17,6 +16,10 @@ struct TeamInfoInput: View {
     @State private var showAlert = false
     @State private var showCompletionAlert = false
     @State var count = 0
+    //Data Display Variables
+    @State var pointsInfoDisplay = false
+    @State var otherPointsInfoDisplay = false
+    @State var chargePointsInfoDisplay = false
     //Team Variables
     @State var alliance = "red"
     @State var alliances = ["red", "blue"]
@@ -107,11 +110,19 @@ struct TeamInfoInput: View {
         middleTelePoints = 0
         topTelePoints = 0
         allianceLinks = 0
+        rankingPoints = 0
         team = ""
         amtOfGames = 0
         matchNumber = 0
         new = true
         count = 0
+        autoChargeEngaged = false
+        autoChargeNotEngaged = false
+        teleChargeEngaged = false
+        teleChargeNotEngaged = false
+        mobilityBonus = false
+        parkingBonus = false
+        notes = ""
     }
     
     
@@ -130,6 +141,7 @@ struct TeamInfoInput: View {
                         Picker("Alliance", selection: $alliance) {
                             ForEach(alliances, id: \.self) { alliance in
                                 Text(alliance.capitalized)
+                                //Add Color Change Based On Alliance Color
                             }
                         }
                         .pickerStyle(.segmented)
@@ -165,33 +177,224 @@ struct TeamInfoInput: View {
                         }
                         .padding()
                     }
-                    //Alliance Links
-                    VStack {
-                        HStack {
-                            Stepper {
-                                Text("Alliance Links: \(allianceLinks)")
-                            } onIncrement: {
-                                if (allianceLinks <= 8) {
-                                    allianceLinks += 1
-                                }
-                            } onDecrement: {
-                                if (allianceLinks >= 1) {
-                                    allianceLinks -= 1
-                                }
-                            }
-                        }
-                        .padding()
-                    }
                     //Points
-                    VStack {
                         VStack {
                             VStack {
-                                Text("Points")
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 20))
-                                    .padding([.bottom], 2)
-                                Text("Enter Pieces Scored")
-                                    .font(.system(size: 13))
+                                VStack {
+                                    HStack {
+                                        Button {
+                                            pointsInfoDisplay = true
+                                        } label: {
+                                            Image(systemName: "questionmark.circle")
+                                        }
+                                        .popover(isPresented: $pointsInfoDisplay) {
+                                            VStack {
+                                                Text("Points Info")
+                                                    .font(.system(size: 20))
+                                                    .fontWeight(.bold)
+                                                ScrollView {
+                                                    VStack {
+                                                        Text("Bottom Auto")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("This is worth three points")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                    .padding()
+                                                    VStack {
+                                                        Text("Middle Auto")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("This is worth four points")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                    .padding()
+                                                    VStack {
+                                                        Text("Top Auto")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("THis is worth six points")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                    .padding()
+                                                    VStack {
+                                                        Text("Bottom Tele")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("This is worth two points")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                    .padding()
+                                                    VStack {
+                                                        Text("Middle Tele")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("This is worth three points")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                    .padding()
+                                                    VStack {
+                                                        Text("Top Tele")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("This is worth five points")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                    .padding()
+                                                    VStack {
+                                                        Text("Alliance Links")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("Alliance Links are gained when three nodes in a row contain pieces.")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .multilineTextAlignment(.center)
+                                                        Image("AllianceLinkExample")
+                                                            .resizable()
+                                                            .frame(width: UIScreen.main.bounds.width-20)
+                                                            .aspectRatio(3.192/1, contentMode: .fit)
+                                                    }
+                                                    .padding()
+                                                    VStack {
+                                                        Text("Ranking Points")
+                                                            .font(.system(size: 17))
+                                                            .fontWeight(.semibold)
+                                                        Text("Ranking Points are earned three ways:")
+                                                            .padding([.leading, .trailing], 25)
+                                                            .padding([.top, .bottom], 2)
+                                                            .multilineTextAlignment(.center)
+                                                        Text("- If there are twenty-six total charge station points during the game, one ranking point is gained.")
+                                                            .padding([.leading, .trailing], 15)
+                                                            .padding([.top, .bottom], 2)
+                                                            .multilineTextAlignment(.center)
+                                                        Text("- If there is a draw, it is one ranking point.")
+                                                            .padding([.leading, .trailing], 15)
+                                                            .padding([.top, .bottom], 2)
+                                                            .multilineTextAlignment(.center)
+                                                        Text("- If you win, it is two ranking points.")
+                                                            .padding([.leading, .trailing], 15)
+                                                            .padding([.top, .bottom], 2)
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                    .padding()
+                                                }
+                                            }
+                                            .padding()
+                                        }
+                                        Text("Points")
+                                            .fontWeight(.bold)
+                                            .font(.system(size: 20))
+                                            .padding([.bottom], 2)
+                                    }
+                                    Text("Enter Pieces Scored")
+                                        .font(.system(size: 13))
+                                    //Auto Points
+                                    VStack {
+                                        //Bottom Auto Points
+                                        HStack {
+                                            Stepper {
+                                                Text("Bottom Auto: \(bottomAutoPoints)")
+                                            } onIncrement: {
+                                                bottomAutoPoints += 1
+                                            } onDecrement: {
+                                                if (bottomAutoPoints >= 1) {
+                                                    bottomAutoPoints -= 1
+                                                }
+                                            }
+                                            .padding([.leading, .trailing], screenWidth/6)
+                                        }
+                                        //Middle Auto Points
+                                        HStack {
+                                            Stepper {
+                                                Text("Middle Auto: \(middleAutoPoints)")
+                                            } onIncrement: {
+                                                middleAutoPoints += 1
+                                            } onDecrement: {
+                                                if (middleAutoPoints >= 1) {
+                                                    middleAutoPoints -= 1
+                                                }
+                                            }
+                                            .padding([.leading, .trailing], screenWidth/6)
+                                        }
+                                        //Top Auto Points
+                                        HStack {
+                                            Stepper {
+                                                Text("Top Auto: \(topAutoPoints)")
+                                            } onIncrement: {
+                                                topAutoPoints += 1
+                                            } onDecrement: {
+                                                if (topAutoPoints >= 1) {
+                                                    topAutoPoints -= 1
+                                                }
+                                            }
+                                            .padding([.leading, .trailing], screenWidth/6)
+                                        }
+                                    }
+                                    //Tele Points
+                                    VStack {
+                                        //Bottom Tele Points
+                                        HStack {
+                                            Stepper {
+                                                Text("Bottom Tele: \(bottomTelePoints)")
+                                            } onIncrement: {
+                                                bottomTelePoints += 1
+                                            } onDecrement: {
+                                                if (bottomTelePoints >= 1) {
+                                                    bottomTelePoints -= 1
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding([.leading, .trailing], screenWidth/6)
+                                }
+                                //Middle Tele Points
+                                HStack {
+                                    Stepper {
+                                        Text("Middle Tele: \(middleTelePoints)")
+                                    } onIncrement: {
+                                        middleTelePoints += 1
+                                    } onDecrement: {
+                                        if (middleTelePoints >= 1) {
+                                            middleTelePoints -= 1
+                                        }
+                                    }
+                                    .padding([.leading, .trailing], screenWidth/6)
+                                }
+                                //Top Tele Points
+                                HStack {
+                                    Stepper {
+                                        Text("Top Tele: \(topTelePoints)")
+                                    } onIncrement: {
+                                        topTelePoints += 1
+                                    } onDecrement: {
+                                        if (topTelePoints >= 1) {
+                                            topTelePoints -= 1
+                                        }
+                                    }
+                                }
+                                .padding([.leading, .trailing], screenWidth/6)
+                                //Alliance Links
+                                VStack {
+                                    HStack {
+                                        Stepper {
+                                            Text("Alliance Links: \(allianceLinks)")
+                                        } onIncrement: {
+                                            if (allianceLinks <= 8) {
+                                                allianceLinks += 1
+                                            }
+                                        } onDecrement: {
+                                            if (allianceLinks >= 1) {
+                                                allianceLinks -= 1
+                                            }
+                                        }
+                                    }
+                                    .padding([.leading, .trailing], screenWidth/6)
+                                }
                                 //Ranking Points
                                 VStack {
                                     HStack {
@@ -207,102 +410,48 @@ struct TeamInfoInput: View {
                                                 }
                                             }
                                         }
-                                    .padding([.leading, .trailing], 68)
+                                    .padding([.leading, .trailing], screenWidth/6)
                                     }
-                                //Auto Points
+                                //Other Points
                                 VStack {
-                                    //Bottom Auto Points
                                     HStack {
-                                        Stepper {
-                                            Text("Bottom Auto: \(bottomAutoPoints)")
-                                        } onIncrement: {
-                                            bottomAutoPoints += 1
-                                        } onDecrement: {
-                                            if (bottomAutoPoints >= 1) {
-                                                bottomAutoPoints -= 1
-                                            }
+                                        Button {
+                                            otherPointsInfoDisplay = true
+                                        } label: {
+                                            Image(systemName: "questionmark.circle")
                                         }
-                                        .padding([.leading, .trailing], screenWidth/6)
-                                    }
-                                    //Middle Auto Points
-                                    HStack {
-                                        Stepper {
-                                            Text("Middle Auto: \(middleAutoPoints)")
-                                        } onIncrement: {
-                                            middleAutoPoints += 1
-                                        } onDecrement: {
-                                            if (middleAutoPoints >= 1) {
-                                                middleAutoPoints -= 1
+                                        .popover(isPresented: $otherPointsInfoDisplay) {
+                                            VStack {
+                                                Text("Other Points Info")
+                                                    .font(.system(size: 20))
+                                                    .fontWeight(.bold)
+                                                VStack {
+                                                    Text("Mobility Points")
+                                                        .font(.system(size: 17))
+                                                        .fontWeight(.semibold)
+                                                    Text("Mobility Points can only be earned during auto. It is worth three points and is gained when the robots bumpers completely leave its community.")
+                                                        .padding([.leading, .trailing], 25)
+                                                        .multilineTextAlignment(.center)
+                                                }
+                                                .padding()
+                                                VStack {
+                                                    Text("Parking Points")
+                                                        .font(.system(size: 17))
+                                                        .fontWeight(.semibold)
+                                                    Text("Parking Points are earned when a robot is completely within its community at the end of a match, but is not docked. It is worth 2 points.")
+                                                        .padding([.leading, .trailing], 25)
+                                                        .multilineTextAlignment(.center)
+                                                }
                                             }
+                                            .padding([.bottom], 325)
                                         }
-                                        .padding([.leading, .trailing], screenWidth/6)
-                                    }
-                                    //Top Auto Points
-                                    HStack {
-                                        Stepper {
-                                            Text("Top Auto: \(topAutoPoints)")
-                                        } onIncrement: {
-                                            topAutoPoints += 1
-                                        } onDecrement: {
-                                            if (topAutoPoints >= 1) {
-                                                topAutoPoints -= 1
-                                            }
-                                        }
-                                        .padding([.leading, .trailing], screenWidth/6)
+                                        Text("Other Points")
+                                            .font(.system(size: 17))
+                                            .fontWeight(.bold)
                                     }
                                 }
-                                //Tele Points
+                                //Mobility Check
                                 VStack {
-                                    //Bottom Tele Points
-                                    HStack {
-                                        Stepper {
-                                            Text("Bottom Tele: \(bottomTelePoints)")
-                                        } onIncrement: {
-                                            bottomTelePoints += 1
-                                        } onDecrement: {
-                                            if (bottomTelePoints >= 1) {
-                                                bottomTelePoints -= 1
-                                            }
-                                        }
-                                    }
-                                }
-                                .padding([.leading, .trailing], screenWidth/6)
-                            }
-                            //Middle Tele Points
-                            HStack {
-                                Stepper {
-                                    Text("Middle Tele: \(middleTelePoints)")
-                                } onIncrement: {
-                                    middleTelePoints += 1
-                                } onDecrement: {
-                                    if (middleTelePoints >= 1) {
-                                        middleTelePoints -= 1
-                                    }
-                                }
-                                .padding([.leading, .trailing], screenWidth/6)
-                            }
-                            //Top Tele Points
-                            HStack {
-                                Stepper {
-                                    Text("Top Tele: \(topTelePoints)")
-                                } onIncrement: {
-                                    topTelePoints += 1
-                                } onDecrement: {
-                                    if (topTelePoints >= 1) {
-                                        topTelePoints -= 1
-                                    }
-                                }
-                                .padding([.leading, .trailing], screenWidth/6)
-                            }
-                        }
-                            //Other Points
-                            VStack {
-                                Text("Other Points")
-                                    .font(.system(size: 17))
-                                    .fontWeight(.bold)
-                            }
-                            //Mobility Check
-                            VStack {
                                     HStack {
                                         Text("Got Mobility Points")
                                         Spacer()
@@ -313,53 +462,89 @@ struct TeamInfoInput: View {
                                 .padding([.top], 1)
                             }
                             .padding([.top], 5)
-                    //Parking Check
-                        VStack {
-                            HStack {
-                                Text("Got Parking Bonus")
-                                //ADD CHECK SO NOT SELECTED IF CHARGE IS SELECTED
-                                Spacer()
-                                checkbox(checked: $parkingBonus)
+                            //Parking Check
+                            VStack {
+                                HStack {
+                                    Text("Got Parking Bonus")
+                                    //ADD CHECK SO NOT SELECTED IF CHARGE IS SELECTED
+                                    Spacer()
+                                    checkbox(checked: $parkingBonus)
+                                }
+                                .padding([.leading, .trailing], 68)
                             }
-                            .padding([.leading, .trailing], 68)
+                            .padding([.top], 1)
+                            //Charging Check
+                            VStack {
+                                HStack {
+                                    Button {
+                                        chargePointsInfoDisplay = true
+                                    } label: {
+                                        Image(systemName: "questionmark.circle")
+                                    }
+                                    .popover(isPresented: $chargePointsInfoDisplay) {
+                                        VStack {
+                                            Text("Charge Points Info")
+                                                .font(.system(size: 20))
+                                                .fontWeight(.bold)
+                                            VStack {
+                                                Text("Auto Charge")
+                                                    .font(.system(size: 17))
+                                                    .fontWeight(.semibold)
+                                                Text("- Docked and Not Engaged is worth eight points in auto.")
+                                                    .multilineTextAlignment(.center)
+                                                Text("- Docked and Engaged is worth twelve points in atuo.")
+                                                    .multilineTextAlignment(.center)
+                                            }
+                                            .padding()
+                                            VStack {
+                                                Text("Tele Charge")
+                                                    .font(.system(size: 17))
+                                                    .fontWeight(.semibold)
+                                                Text("- Docked and Not Engaged is worth six points in tele.")
+                                                    .multilineTextAlignment(.center)
+                                                Text("- Docked and Engaged is worth ten points in tele.")
+                                                    .multilineTextAlignment(.center)
+                                            }
+                                            .padding()
+                                        }
+                                        .padding([.bottom], 300)
+                                    }
+                                    Text("Charge Points")
+                                        .font(.system(size: 17))
+                                        .fontWeight(.bold)
+                                        .padding([.bottom], 2)
+                                }
+                                VStack {
+                                    HStack {
+                                        Text("Auto Charge Not Engaged")
+                                        Spacer()
+                                        checkbox(checked: $autoChargeNotEngaged)
+                                    }
+                                    .padding([.bottom], 1)
+                                    HStack {
+                                        Text("Auto Charge Engaged")
+                                        Spacer()
+                                        checkbox(checked: $autoChargeEngaged)
+                                    }
+                                }
+                                .padding([.bottom], 10)
+                                VStack {
+                                    HStack {
+                                        Text("Tele Charge Not Engaged")
+                                        Spacer()
+                                        checkbox(checked: $teleChargeNotEngaged)
+                                    }
+                                    .padding([.bottom], 1)
+                                    HStack {
+                                        Text("Tele Charge Engaged")
+                                        Spacer()
+                                        checkbox(checked: $teleChargeEngaged)
+                                    }
+                                }
+                            }
+                            .padding([.leading, .trailing], 50)
+                            .padding()
                         }
-                        .padding([.top], 1)
-                    //Charging Check
-                    VStack {
-                        Text("Charge Points")
-                            .font(.system(size: 17))
-                            .fontWeight(.bold)
-                            .padding([.bottom], 2)
-                        VStack {
-                            HStack {
-                                Text("Got Auto Charge Not Engaged")
-                                Spacer()
-                                checkbox(checked: $autoChargeNotEngaged)
-                            }
-                            .padding([.bottom], 1)
-                            HStack {
-                                Text("Got Auto Charge Engaged")
-                                Spacer()
-                                checkbox(checked: $autoChargeEngaged)
-                            }
-                        }
-                        .padding([.bottom], 10)
-                        VStack {
-                            HStack {
-                                Text("Got Tele Charge Not Engaged")
-                                Spacer()
-                                checkbox(checked: $teleChargeNotEngaged)
-                            }
-                            .padding([.bottom], 1)
-                            HStack {
-                                Text("Got Tele Charge Engaged")
-                                Spacer()
-                                checkbox(checked: $teleChargeEngaged)
-                            }
-                        }
-                    }
-                    .padding([.leading, .trailing], 50)
-                    .padding()
                 //Quick Notes
                     VStack {
                         TextField (
@@ -458,21 +643,21 @@ struct TeamInfoInput: View {
                 .navigationTitle("New Team Data")
             }
         }
-        .onAppear {
-            //Reset Inputs
-            pointsScored = 0
-            bottomAutoPoints = 0
-            middleAutoPoints = 0
-            topAutoPoints = 0
-            bottomTelePoints = 0
-            middleTelePoints = 0
-            topTelePoints = 0
-            allianceLinks = 0
-            team = ""
-            amtOfGames = 0
-            matchNumber = 0
-            new = true
-        }
+//        .onAppear {
+//            //Reset Inputs
+//            pointsScored = 0
+//            bottomAutoPoints = 0
+//            middleAutoPoints = 0
+//            topAutoPoints = 0
+//            bottomTelePoints = 0
+//            middleTelePoints = 0
+//            topTelePoints = 0
+//            allianceLinks = 0
+//            team = ""
+//            amtOfGames = 0
+//            matchNumber = 0
+//            new = true
+//        }
     }
 }
 

@@ -13,61 +13,61 @@ struct TeamFilter: View {
     @State var amtOfPoints = 0.0
     @State var amtOfAutoPoints = 0.0
     @State var amtOfTelePoints = 0.0
-    @State var minPoints = 0
-    @State var minAutoPoints = 0
-    @State var minTelePoints = 0
-    @State var maxPoints = 0
-    @State var maxAutoPoints = 0
-    @State var maxTelePoints = 0
+    @State var minPoints = 0.0
+    @State var minAutoPoints = 0.0
+    @State var minTelePoints = 0.0
+    @State var maxPoints = 0.0
+    @State var maxAutoPoints = 0.0
+    @State var maxTelePoints = 0.0
     @State private var isEditing = false
-    @State var teams : [Team] = []
+    @State var averageTeams : [AverageDataTeamStruct] = []
     
     func getMinAndMaxPointValues() {
-        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
-            let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
-            teams.removeAll()
+        if let teamData = UserDefaults.standard.data(forKey: "averageTeamsKey") {
+            let decodedTeamData = try? JSONDecoder().decode([AverageDataTeamStruct].self, from: teamData)
+            averageTeams.removeAll()
             for i in 0...(decodedTeamData?.count ?? 0) - 1 {
-                teams.append((decodedTeamData?[i])!)
+                averageTeams.append((decodedTeamData?[i])!)
             }
         }
-        if (teams.count > 0) {
-            minPoints = teams[0].totalPoints
-            minAutoPoints = teams[0].autoBottomPoints + teams[0].autoMiddlePoints + teams[0].autoTopPoints
-            minTelePoints = teams[0].teleBottomPoints + teams[0].teleMiddlePoints + teams[0].teleTopPoints
-            maxPoints = teams[0].totalPoints
-            maxAutoPoints = teams[0].autoBottomPoints + teams[0].autoMiddlePoints + teams[0].autoTopPoints
-            maxTelePoints = teams[0].teleBottomPoints + teams[0].teleMiddlePoints + teams[0].teleTopPoints
-            for i in 1...teams.count-1 {
+        if (averageTeams.count > 0) {
+            minPoints = averageTeams[0].autoBottom + averageTeams[0].autoMiddle + averageTeams[0].autoTop + averageTeams[0].teleBottom + averageTeams[0].teleMiddle + averageTeams[0].teleTop + averageTeams[0].allianceLinks + averageTeams[0].autoCharged + averageTeams[0].teleCharged + averageTeams[0].engagement + averageTeams[0].mobilityPoints + averageTeams[0].parkingPoints + averageTeams[0].rankingPoints
+            minAutoPoints = averageTeams[0].autoBottom + averageTeams[0].autoMiddle + averageTeams[0].autoTop
+            minTelePoints = averageTeams[0].teleBottom + averageTeams[0].teleMiddle + averageTeams[0].teleTop
+            maxPoints = averageTeams[0].autoBottom + averageTeams[0].autoMiddle + averageTeams[0].autoTop + averageTeams[0].teleBottom + averageTeams[0].teleMiddle + averageTeams[0].teleTop + averageTeams[0].allianceLinks + averageTeams[0].autoCharged + averageTeams[0].teleCharged + averageTeams[0].engagement + averageTeams[0].mobilityPoints + averageTeams[0].parkingPoints + averageTeams[0].rankingPoints
+            maxAutoPoints = averageTeams[0].autoBottom + averageTeams[0].autoMiddle + averageTeams[0].autoTop
+            maxTelePoints = averageTeams[0].teleBottom + averageTeams[0].teleMiddle + averageTeams[0].teleTop
+            for i in 1...averageTeams.count-1 {
                 //Check For Min Points
-                if (teams[i].totalPoints < minPoints) {
-                    minPoints = teams[i].totalPoints
+                if (averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop + averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop + averageTeams[i].allianceLinks + averageTeams[i].autoCharged + averageTeams[i].teleCharged + averageTeams[i].engagement + averageTeams[i].mobilityPoints + averageTeams[i].parkingPoints + averageTeams[i].rankingPoints < minPoints) {
+                    minPoints = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop + averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop + averageTeams[i].allianceLinks + averageTeams[i].autoCharged + averageTeams[i].teleCharged + averageTeams[i].engagement + averageTeams[i].mobilityPoints + averageTeams[i].parkingPoints + averageTeams[i].rankingPoints
                     print("Min points: \(minPoints)")
                 }
                 //Check For Min Auto Points
-                if (teams[i].autoBottomPoints + teams[i].autoMiddlePoints + teams[i].autoTopPoints < minAutoPoints) {
-                    minAutoPoints = teams[i].autoBottomPoints + teams[i].autoMiddlePoints + teams[i].autoTopPoints
+                if (averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop < minAutoPoints) {
+                    minAutoPoints = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop
                     print("Min Auto Points: \(minAutoPoints)")
                 }
                 //Check For Min Tele Points
-                if (teams[i].teleBottomPoints + teams[i].teleMiddlePoints + teams[i].teleTopPoints < minTelePoints) {
-                    minTelePoints = teams[i].teleBottomPoints + teams[i].teleMiddlePoints + teams[i].teleTopPoints
+                if (averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop < minTelePoints) {
+                    minTelePoints = averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop
                     print("Min Tele Points: \(minTelePoints)")
                     
                 }
                 //Check For Max Points
                 //Check For Min Points
-                if (teams[i].totalPoints > minPoints) {
-                    maxPoints = teams[i].totalPoints
+                if (averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop + averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop + averageTeams[i].allianceLinks + averageTeams[i].autoCharged + averageTeams[i].teleCharged + averageTeams[i].engagement + averageTeams[i].mobilityPoints + averageTeams[i].parkingPoints + averageTeams[i].rankingPoints > minPoints) {
+                    maxPoints = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop + averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop + averageTeams[i].allianceLinks + averageTeams[i].autoCharged + averageTeams[i].teleCharged + averageTeams[i].engagement + averageTeams[i].mobilityPoints + averageTeams[i].parkingPoints + averageTeams[i].rankingPoints
                     print("Max points: \(maxPoints)")
                 }
                 //Check For Max Auto Points
-                if (teams[i].autoBottomPoints + teams[i].autoMiddlePoints + teams[i].autoTopPoints > minAutoPoints) {
-                    maxAutoPoints = teams[i].autoBottomPoints + teams[i].autoMiddlePoints + teams[i].autoTopPoints
+                if (averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop > minAutoPoints) {
+                    maxAutoPoints = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop
                     print("Max Auto Points: \(maxAutoPoints)")
                 }
                 //Check For Max Tele Points
-                if (teams[i].teleBottomPoints + teams[i].teleMiddlePoints + teams[i].teleTopPoints > minTelePoints) {
-                    maxTelePoints = teams[i].teleBottomPoints + teams[i].teleMiddlePoints + teams[i].teleTopPoints
+                if (averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop > minTelePoints) {
+                    maxTelePoints = averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop
                     print("Max Tele Points: \(maxTelePoints)")
                     
                 }
@@ -81,10 +81,10 @@ struct TeamFilter: View {
                     //Filters
                     VStack {
                         VStack {
-                            Text("Min Points \(amtOfPoints, specifier: "%.f")")
+                            Text("Min Points \(amtOfPoints, specifier: "%.2f")")
                             Slider (
                                 value: $amtOfPoints,
-                                in: Double(minPoints)...Double(maxPoints),
+                                in: minPoints...maxPoints,
                                 onEditingChanged: { editing in
                                     isEditing = editing
                                 }
@@ -92,10 +92,10 @@ struct TeamFilter: View {
                             .padding()
                         }
                         VStack {
-                            Text("Min Auto Points \(amtOfAutoPoints, specifier: "%.f")")
+                            Text("Min Auto Points \(amtOfAutoPoints, specifier: "%.2f")")
                             Slider (
                                 value: $amtOfAutoPoints,
-                                in: Double(minAutoPoints)...Double(maxAutoPoints),
+                                in: minAutoPoints...maxAutoPoints,
                                 onEditingChanged: { editing in
                                     isEditing = editing
                                 }
@@ -103,10 +103,10 @@ struct TeamFilter: View {
                             .padding()
                         }
                         VStack {
-                            Text("Min Tele points \(amtOfTelePoints, specifier: "%.f")")
+                            Text("Min Tele points \(amtOfTelePoints, specifier: "%.2f")")
                             Slider (
                                 value: $amtOfTelePoints,
-                                in: Double(minTelePoints)...Double(maxTelePoints),
+                                in: minTelePoints...maxTelePoints,
                                 onEditingChanged: { editing in
                                     isEditing = editing
                                 }

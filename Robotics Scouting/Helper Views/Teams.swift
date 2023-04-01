@@ -11,14 +11,16 @@ import SystemConfiguration
 struct Teams: View {
     
     @State var teams : [Team] = []
+    @State var averageTeams : [AverageDataTeamStruct] = []
     @State private var showingFilterPage = false
     var testTeam = Team.init(id: 3082, name: "3082", gamesPlayed: 4, totalPoints: 24, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12, autoCharged: 1, teleCharged: 1, engagement: 1, mobilityPoints: 1, parkingPoints: 1, rankingPoints: 3)
     @State var searchText = ""
+    @State var averageSearchText = ""
     var filterHigherToLower = false
-    @State var displayTeams : [Team] = []
-    @State var minPoints = 0
-    @State var minAutoPoints = 0.0
-    @State var minTelePionts = 0.0
+    @State var displayTeams : [AverageDataTeamStruct] = []
+    @State var minPoints : Double = 0.0
+    @State var minAutoPoints : Double = 0.0
+    @State var minTelePionts : Double = 0.0
     @State var sortBy = "";
     @State var hasInternet = true;
     
@@ -53,105 +55,110 @@ struct Teams: View {
         filterHigherToLowerTeamNumbers()
     }
     //Search and Filters
-    var searchResults: [Team] {
+    var searchResults: [AverageDataTeamStruct] {
         if searchText.isEmpty {
-            return teams
+            return averageTeams
         } else {
-            return teams.filter {
-                $0.name.localizedCaseInsensitiveContains(searchText)
+            return averageTeams.filter {
+                $0.team.localizedCaseInsensitiveContains(searchText)
             }
         }
     }
-    
-    @State var higherToLowerTeams : [Team] = []
+    @State var higherToLowerTeams : [AverageDataTeamStruct] = []
     func filterHigherToLowerPoints() {
-        higherToLowerTeams = teams.sorted {$0.totalPoints > $1.totalPoints}
+        higherToLowerTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop + $0.teleBottom + $0.teleMiddle + $0.teleTop + $0.allianceLinks + $0.autoCharged + $0.teleCharged + $0.engagement + $0.mobilityPoints + $0.parkingPoints + $0.rankingPoints > $1.autoBottom + $1.autoMiddle + $1.autoTop + $1.teleBottom + $1.teleMiddle + $1.teleTop + $1.allianceLinks + $1.autoCharged + $1.teleCharged + $1.engagement + $1.mobilityPoints + $1.parkingPoints + $1.rankingPoints }
         print("Teams are \(higherToLowerTeams)")
-        teams = higherToLowerTeams
+        averageTeams = higherToLowerTeams
         sortBy = "higherToLowerPoints"
     }
-    @State var lowerToHigherTeams : [Team] = []
+    @State var lowerToHigherTeams : [AverageDataTeamStruct] = []
     func filterLowerToHigherPoints() {
-        lowerToHigherTeams = teams.sorted { $0.totalPoints < $1.totalPoints}
+        lowerToHigherTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop + $0.teleBottom + $0.teleMiddle + $0.teleTop + $0.allianceLinks + $0.autoCharged + $0.teleCharged + $0.engagement + $0.mobilityPoints + $0.parkingPoints + $0.rankingPoints < $1.autoBottom + $1.autoMiddle + $1.autoTop + $1.teleBottom + $1.teleMiddle + $1.teleTop + $1.allianceLinks + $1.autoCharged + $1.teleCharged + $1.engagement + $1.mobilityPoints + $1.parkingPoints + $1.rankingPoints }
         print(lowerToHigherTeams)
         print("Lower To Higher Teams are \(lowerToHigherTeams)")
-        teams = lowerToHigherTeams
+        averageTeams = lowerToHigherTeams
         sortBy = "lowerToHigherPoints"
     }
-    @State var higherToLowerAutoTeams : [Team] = []
+    //UPDATE VALUES FOR AVERAGEDATATEAMSTRUCT
+    @State var higherToLowerAutoTeams : [AverageDataTeamStruct] = []
     func filterHigherToLowerAutoPoints() {
-        higherToLowerAutoTeams = teams.sorted { $0.autoBottomPoints + $0.autoMiddlePoints + $0.autoTopPoints > $1.autoBottomPoints + $1.autoMiddlePoints + $1.autoMiddlePoints }
+        higherToLowerAutoTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop > $1.autoBottom + $1.autoMiddle + $1.autoTop }
         print(higherToLowerAutoTeams)
         print("Higher To Lower Auto Teams are \(higherToLowerAutoTeams)")
-        teams = higherToLowerAutoTeams
+        averageTeams = higherToLowerAutoTeams
         sortBy = "higherToLowerAutoPoints"
     }
-    @State var lowerToHigherAutoTeams : [Team] = []
+    @State var lowerToHigherAutoTeams : [AverageDataTeamStruct] = []
     func filterLowerToHigherAutoPoints() {
-        lowerToHigherAutoTeams = teams.sorted { $0.autoBottomPoints + $0.autoMiddlePoints + $0.autoTopPoints < $1.autoBottomPoints + $1.autoMiddlePoints + $1.autoMiddlePoints }
+        lowerToHigherAutoTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop < $1.autoBottom + $1.autoMiddle + $1.autoTop }
         print(lowerToHigherAutoTeams)
         print("Lower To Higher Auto Teams are \(lowerToHigherAutoTeams)")
-        teams = lowerToHigherAutoTeams
+        averageTeams = lowerToHigherAutoTeams
         sortBy = "lowerToHigherAutoPoints"
     }
-    @State var higherToLowerTeleTeams : [Team] = []
+    @State var higherToLowerTeleTeams : [AverageDataTeamStruct] = []
     func filterHigherToLowerTelePoints() {
-        higherToLowerTeleTeams = teams.sorted { $0.teleBottomPoints + $0.teleMiddlePoints + $0.teleTopPoints > $1.teleBottomPoints + $1.teleMiddlePoints + $1.teleTopPoints }
+        higherToLowerTeleTeams = averageTeams.sorted { $0.teleBottom + $0.teleMiddle + $0.teleTop > $1.teleBottom + $1.teleMiddle + $1.teleTop }
         print(higherToLowerTeleTeams)
         print("Higher To Lower Tele Teams are \(higherToLowerTeleTeams)")
-        teams = higherToLowerTeleTeams
+        averageTeams = higherToLowerTeleTeams
         sortBy = "higherToLowerTelePoints"
     }
-    @State var lowerToHigherTeleTeams : [Team] = []
+    @State var lowerToHigherTeleTeams : [AverageDataTeamStruct] = []
     func filterLowerToHigherTelePoints() {
-        lowerToHigherTeleTeams = teams.sorted { $0.teleBottomPoints + $0.teleMiddlePoints + $0.teleTopPoints < $1.teleBottomPoints + $1.teleMiddlePoints + $1.teleTopPoints }
+        lowerToHigherTeleTeams = averageTeams.sorted { $0.teleBottom + $0.teleMiddle + $0.teleTop < $1.teleBottom + $1.teleMiddle + $1.teleTop }
         print(lowerToHigherTeleTeams)
         print("Lower To Higher Tele Teams are \(lowerToHigherTeleTeams)")
-        teams = lowerToHigherTeleTeams
+        averageTeams = lowerToHigherTeleTeams
         sortBy = "lowerToHigherTelePoints"
     }
-    @State var higherToLowerTeamNumbers : [Team] = []
+    @State var higherToLowerTeamNumbers : [AverageDataTeamStruct] = []
     func filterHigherToLowerTeamNumbers() {
-        higherToLowerTeamNumbers = teams.sorted { $0.name < $1.name}
-        teams = higherToLowerTeamNumbers
+        higherToLowerTeamNumbers = averageTeams.sorted { $0.team > $1.team}
+        averageTeams = higherToLowerTeamNumbers
         sortBy = "higherToLowerTeamNumbers"
     }
-    @State var lowerToHigherTeamNumbers : [Team] = []
+    @State var lowerToHigherTeamNumbers : [AverageDataTeamStruct] = []
     func filterLowerToHigherTeamNumbers() {
-        lowerToHigherTeamNumbers = teams.sorted { $0.name > $1.name}
-        teams = lowerToHigherTeamNumbers
+        lowerToHigherTeamNumbers = averageTeams.sorted { $0.team < $1.team}
+        averageTeams = lowerToHigherTeamNumbers
         sortBy = "lowerToHigherTeamNumbers"
     }
-    
     func applyFilters() {
         //Decode
         //Decode Min Points
         let decodedMinPoints = try? JSONDecoder().decode(Double.self, from: UserDefaults.standard.data(forKey: "amtOfPointsFilterKey") ?? Data())
-        let minPoints = Int(decodedMinPoints ?? 0)
+        let minPoints = Double(decodedMinPoints ?? 0)
         print("Min Points After Filters Applied \(minPoints)")
         //Decode Min Auto Points
         let decodedMinAutoPoints = try? JSONDecoder().decode(Double.self, from: UserDefaults.standard.data(forKey: "amtOfAutoPointsFilterKey") ?? Data())
-        let minAutoPoints = Int(decodedMinAutoPoints ?? 0)
+        let minAutoPoints = Double(decodedMinAutoPoints ?? 0)
         print("Min Auto Points After Filters Applied \(minAutoPoints)")
         //Decode Min Tele Points
         let decodedMinTelePoints = try? JSONDecoder().decode(Double.self, from: UserDefaults.standard.data(forKey: "amtOfTelePointsFilterKey") ?? Data())
-        let minTelePoints = Int(decodedMinTelePoints ?? 0)
+        let minTelePoints = Double(decodedMinTelePoints ?? 0)
         print("Min Tele Points After Filter Applied \(minTelePoints)")
         //Visual Update
-        print(teams.count)
+        print(averageTeams.count)
         displayTeams.removeAll()
-        if (teams.count > 0) {
+        if (averageTeams.count > 0) {
             for i in 0...teams.count-1 {
-                let teamAutoMinPoints = teams[i].autoBottomPoints + teams[i].autoMiddlePoints + teams[i].autoTopPoints
-                let teamTeleMinPoints = teams[i].teleBottomPoints + teams[i].teleMiddlePoints + teams[i].teleTopPoints
-                print("\(teams[i])")
-                if (teams[i].totalPoints >= minPoints && teamAutoMinPoints >= minAutoPoints && teamTeleMinPoints >= minTelePoints) {
-                    displayTeams.append(teams[i])
+                print("I is \(i)")
+                let teamAutoMinPoints = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop
+                let teamTeleMinPoints = averageTeams[i].teleBottom + averageTeams[i].teleBottom + averageTeams[i].teleTop
+                let points = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop + averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop + averageTeams[i].allianceLinks + averageTeams[i].autoCharged + averageTeams[i].teleCharged + averageTeams[i].engagement + averageTeams[i].mobilityPoints + averageTeams[i].parkingPoints + averageTeams[i].rankingPoints
+                print("\(averageTeams[i])")
+                @State var count = 0
+                if (points >= minPoints && teamAutoMinPoints >= minAutoPoints && teamTeleMinPoints >= minTelePoints) {
+                    displayTeams.append(averageTeams[i])
+                    count+=1
+                    print("Count Is \(count)")
                 }
             }
+            print("DISPLAY TEAMS")
             print(displayTeams)
-            teams.removeAll()
-            teams = displayTeams
+            averageTeams.removeAll()
+            averageTeams = displayTeams
         }
     }
     
@@ -169,55 +176,92 @@ struct Teams: View {
             let decodedTeamsAvailData = try JSONDecoder().decode(teamsAvailStruct?.self, from: availTeamsData)
             let arrayData = decodedTeamsAvailData?.array
             for i in 0...arrayData!.count - 1 {
-                print(Int(arrayData![i].team))
+                print(Int(arrayData![i].team) ?? 0)
                 availableTeams.append(Int(arrayData![i].team) ?? 0)
             }
         } catch {
             print(error)
         }
+        //teams.removeAll()
         //FATAL ERROR IF NO INTERNET
-        for i in 0...availableTeams.count-1 {
-            guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/data") else {
-                print("error")
-                return
-            }
-            do {
-                let(data, _) = try await URLSession.shared.data(from: teamsURL)
-
-                guard let decodedTeamData = try JSONDecoder().decode(responseJSON?.self, from: data) else {
-                    print("Error")
+        if (availableTeams.count > 0) {
+            for i in 0...availableTeams.count-1 {
+                guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/data") else {
+                    print("Teams URL Error")
                     return
                 }
-                print("Data is \(decodedTeamData)")
-                let totalPoints = Int(decodedTeamData.team.autoBottom)! + Int(decodedTeamData.team.autoMiddle)! + Int(decodedTeamData.team.autoTop)! + Int(decodedTeamData.team.teleBottom)! + Int(decodedTeamData.team.teleMiddle)! + Int(decodedTeamData.team.teleTop)!
-                print("Total Points IS \(totalPoints)")
-                var tempTeam = Team(id: decodedTeamData.team.id, name: decodedTeamData.team.team, gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 1, totalPoints: totalPoints, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0, autoCharged: Int(decodedTeamData.team.autoCharged) ?? 0, teleCharged: Int(decodedTeamData.team.teleCharged) ?? 0, engagement: Int(decodedTeamData.team.engagement) ?? 0, mobilityPoints: Int(decodedTeamData.team.mobilityPoints) ?? 0, parkingPoints: Int(decodedTeamData.team.parkingPoints) ?? 0, rankingPoints: Int(decodedTeamData.team.rankingPoints) ?? 0)
-                if (tempTeam.gamesPlayed == 0) {
-                    tempTeam.gamesPlayed += 1
-                }
-                var new = true
-                print(teams.count)
-                if (teams.count > 0) {
-                    for i in 0...teams.count - 1 {
-                        if (teams[i].name == tempTeam.name) {
-                            new = false
-                        }
+                do {
+                    let(data, _) = try await URLSession.shared.data(from: teamsURL)
+                    
+                    guard let decodedTeamData = try JSONDecoder().decode(responseJSON?.self, from: data) else {
+                        print("Error")
+                        return
                     }
-                    if (new == true) {
+                    print("Data is \(decodedTeamData)")
+                    let totalPoints = Int(decodedTeamData.team.autoBottom)! + Int(decodedTeamData.team.autoMiddle)! + Int(decodedTeamData.team.autoTop)! + Int(decodedTeamData.team.teleBottom)! + Int(decodedTeamData.team.teleMiddle)! + Int(decodedTeamData.team.teleTop)!
+                    print("Total Points IS \(totalPoints)")
+                    var tempTeam = Team(id: decodedTeamData.team.id, name: decodedTeamData.team.team, gamesPlayed: Int(decodedTeamData.team.priorMatches) ?? 1, totalPoints: totalPoints, autoBottomPoints: Int(decodedTeamData.team.autoBottom) ?? 0, autoMiddlePoints: Int(decodedTeamData.team.autoMiddle) ?? 0, autoTopPoints: Int(decodedTeamData.team.autoTop) ?? 0, teleBottomPoints: Int(decodedTeamData.team.teleBottom) ?? 0, teleMiddlePoints: Int(decodedTeamData.team.teleMiddle) ?? 0, teleTopPoints: Int(decodedTeamData.team.teleTop) ?? 0, autoCharged: Int(decodedTeamData.team.autoCharged) ?? 0, teleCharged: Int(decodedTeamData.team.teleCharged) ?? 0, engagement: Int(decodedTeamData.team.engagement) ?? 0, mobilityPoints: Int(decodedTeamData.team.mobilityPoints) ?? 0, parkingPoints: Int(decodedTeamData.team.parkingPoints) ?? 0, rankingPoints: Int(decodedTeamData.team.rankingPoints) ?? 0)
+                    if (tempTeam.gamesPlayed == 0) {
+                        tempTeam.gamesPlayed += 1
+                    }
+                    var new = true
+                    print(teams.count)
+                    if (teams.count > 0) {
+                        for i in 0...teams.count - 1 {
+                            if (teams[i].name == tempTeam.name) {
+                                new = false
+                            }
+                        }
+                        if (new == true) {
+                            teams.append(tempTeam)
+                        }
+                    } else {
                         teams.append(tempTeam)
                     }
-                } else {
-                    teams.append(tempTeam)
+                    if let encoded = try? JSONEncoder().encode(teams) {
+                        UserDefaults.standard.set(encoded, forKey: "teamsKey")
+                    }
+                } catch {
+                    
                 }
-                if let encoded = try? JSONEncoder().encode(teams) {
-                    UserDefaults.standard.set(encoded, forKey: "teamsKey")
+            }
+        }
+        //Get Averages
+        await getTeamAveragesRequest()
+    }
+    //Get Average Teams Data
+    func getTeamAveragesRequest() async {
+        for i in 0...teams.count-1 {
+            guard let teamAveragesURL = URL(string: "http://api.etronicindustries.org/v1/\(teams[i].name)/averages") else {
+                print("Average Teams URL Error")
+                return
+            }
+            print(teamAveragesURL)
+            print("")
+            do {
+                print("runnin")
+                let(decodedTeamData, _) = try await URLSession.shared.data(from: teamAveragesURL)
+                guard let decodedAverageData = try JSONDecoder().decode(AverageDataStruct?.self, from: decodedTeamData) else {
+                    print("error")
+                    return
+                }
+                print("decoded Data \(decodedTeamData)")
+                let decodedAverageTeam : AverageDataTeamStruct = decodedAverageData.objectJSON
+                print(" asfjasf")
+                print("\(decodedAverageData) decodedData")
+                print(decodedAverageTeam)
+                averageTeams.append(decodedAverageTeam)
+                print(averageTeams)
+                //Encode
+                if let encoded = try? JSONEncoder().encode(averageTeams) {
+                    UserDefaults.standard.set(encoded, forKey: "averageTeamsKey")
                 }
             } catch {
 
             }
         }
+        print("average teams \(averageTeams)")
     }
-    
     
     var body: some View {
         VStack {
@@ -242,27 +286,38 @@ struct Teams: View {
                         .frame(width: UIScreen.main.bounds.width/2)
                     }
                     .padding([.bottom, .top], 8)
-                    List((searchResults), id: \.self) {team in
-                        NavigationLink {
-                            TeamInfo(selected: Int(team.name) ?? 0, gamesPlayed: team.gamesPlayed, bottomAutoAveragePoints: team.autoBottomPoints, middleAutoAveragePoints: team.autoMiddlePoints, topAutoAveragePoints: team.autoTopPoints, bottomTeleAveragePoints: team.teleBottomPoints, middleTeleAveragePoints: team.teleMiddlePoints, topTeleAveragePoints: team.teleTopPoints)
-                        } label: {
-                            Text("\(team.name)")
-                        }
-                        
-                    }
-                    
-                    .onAppear {
-                        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
-                            let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
-                            teams.removeAll()
-                            if (decodedTeamData?.count ?? 0 > 0) {
-                                for i in 0...(decodedTeamData?.count ?? 1)-1 {
-                                    teams.append(decodedTeamData![i])
-                                    print(decodedTeamData![i])
-                                    print("runnin")
+                    VStack {
+//                        List((searchResults), id: \.self) {team in
+//                            NavigationLink {
+//                                TeamInfo(selected: Int(team.name) ?? 0, gamesPlayed: team.gamesPlayed, bottomAutoAveragePoints: Double(team.autoBottomPoints), middleAutoAveragePoints: Double(team.autoMiddlePoints), topAutoAveragePoints: Double(team.autoTopPoints), bottomTeleAveragePoints: Double(team.teleBottomPoints), middleTeleAveragePoints: Double(team.teleMiddlePoints), topTeleAveragePoints: Double(team.teleTopPoints))
+//                            } label: {
+//                                Text("\(team.name)")
+//                            }
+//                        }
+                            List((searchResults), id: \.self) { avTeam in
+                                NavigationLink {
+                                    TeamInfo(selected: avTeam.team, bottomAutoAveragePoints: avTeam.autoBottom, middleAutoAveragePoints: avTeam.autoMiddle, topAutoAveragePoints: avTeam.autoTop, bottomTeleAveragePoints: avTeam.teleBottom, middleTeleAveragePoints: avTeam.teleMiddle, topTeleAveragePoints: avTeam.teleTop)
+                                } label: {
+                                    Text("Team \(avTeam.team)")
                                 }
                             }
-                        }
+                    }
+                    
+                    
+
+                    
+                    .onAppear {
+//                        if let teamData = UserDefaults.standard.data(forKey: "teamsKey") {
+//                            let decodedTeamData = try? JSONDecoder().decode([Team].self, from: teamData)
+//                            teams.removeAll()
+//                            if (decodedTeamData?.count ?? 0 > 0) {
+//                                for i in 0...(decodedTeamData?.count ?? 1)-1 {
+//                                    teams.append(decodedTeamData![i])
+//                                    print(decodedTeamData![i])
+//                                    print("runnin")
+//                                }
+//                            }
+//                        }
                         //Apply Filters
                         applyFilters()
                         //Apply Sorting
