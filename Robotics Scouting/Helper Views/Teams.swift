@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
-import SystemConfiguration
 
 struct Teams: View {
     
     @State var teams : [Team] = []
     @State var averageTeams : [AverageDataTeamStruct] = []
+    @State var availableTeams : [Int] = []
     @State private var showingFilterPage = false
     var testTeam = Team.init(id: 3082, name: "3082", gamesPlayed: 4, totalPoints: 24, autoBottomPoints: 12, autoMiddlePoints: 12, autoTopPoints: 12, teleBottomPoints: 12, teleMiddlePoints: 12, teleTopPoints: 12, autoCharged: 1, teleCharged: 1, engagement: 1, mobilityPoints: 1, parkingPoints: 1, rankingPoints: 3)
     @State var searchText = ""
@@ -23,6 +23,7 @@ struct Teams: View {
     @State var minTelePionts : Double = 0.0
     @State var sortBy = "";
     @State var hasInternet = true;
+    
     
     //Check For Internet Connection
     func checkInternet() {
@@ -67,15 +68,12 @@ struct Teams: View {
     @State var higherToLowerTeams : [AverageDataTeamStruct] = []
     func filterHigherToLowerPoints() {
         higherToLowerTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop + $0.teleBottom + $0.teleMiddle + $0.teleTop + $0.allianceLinks + $0.autoCharged + $0.teleCharged + $0.engagement + $0.mobilityPoints + $0.parkingPoints + $0.rankingPoints > $1.autoBottom + $1.autoMiddle + $1.autoTop + $1.teleBottom + $1.teleMiddle + $1.teleTop + $1.allianceLinks + $1.autoCharged + $1.teleCharged + $1.engagement + $1.mobilityPoints + $1.parkingPoints + $1.rankingPoints }
-        print("Teams are \(higherToLowerTeams)")
         averageTeams = higherToLowerTeams
         sortBy = "higherToLowerPoints"
     }
     @State var lowerToHigherTeams : [AverageDataTeamStruct] = []
     func filterLowerToHigherPoints() {
         lowerToHigherTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop + $0.teleBottom + $0.teleMiddle + $0.teleTop + $0.allianceLinks + $0.autoCharged + $0.teleCharged + $0.engagement + $0.mobilityPoints + $0.parkingPoints + $0.rankingPoints < $1.autoBottom + $1.autoMiddle + $1.autoTop + $1.teleBottom + $1.teleMiddle + $1.teleTop + $1.allianceLinks + $1.autoCharged + $1.teleCharged + $1.engagement + $1.mobilityPoints + $1.parkingPoints + $1.rankingPoints }
-        print(lowerToHigherTeams)
-        print("Lower To Higher Teams are \(lowerToHigherTeams)")
         averageTeams = lowerToHigherTeams
         sortBy = "lowerToHigherPoints"
     }
@@ -83,32 +81,24 @@ struct Teams: View {
     @State var higherToLowerAutoTeams : [AverageDataTeamStruct] = []
     func filterHigherToLowerAutoPoints() {
         higherToLowerAutoTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop > $1.autoBottom + $1.autoMiddle + $1.autoTop }
-        print(higherToLowerAutoTeams)
-        print("Higher To Lower Auto Teams are \(higherToLowerAutoTeams)")
         averageTeams = higherToLowerAutoTeams
         sortBy = "higherToLowerAutoPoints"
     }
     @State var lowerToHigherAutoTeams : [AverageDataTeamStruct] = []
     func filterLowerToHigherAutoPoints() {
         lowerToHigherAutoTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop < $1.autoBottom + $1.autoMiddle + $1.autoTop }
-        print(lowerToHigherAutoTeams)
-        print("Lower To Higher Auto Teams are \(lowerToHigherAutoTeams)")
         averageTeams = lowerToHigherAutoTeams
         sortBy = "lowerToHigherAutoPoints"
     }
     @State var higherToLowerTeleTeams : [AverageDataTeamStruct] = []
     func filterHigherToLowerTelePoints() {
         higherToLowerTeleTeams = averageTeams.sorted { $0.teleBottom + $0.teleMiddle + $0.teleTop > $1.teleBottom + $1.teleMiddle + $1.teleTop }
-        print(higherToLowerTeleTeams)
-        print("Higher To Lower Tele Teams are \(higherToLowerTeleTeams)")
         averageTeams = higherToLowerTeleTeams
         sortBy = "higherToLowerTelePoints"
     }
     @State var lowerToHigherTeleTeams : [AverageDataTeamStruct] = []
     func filterLowerToHigherTelePoints() {
         lowerToHigherTeleTeams = averageTeams.sorted { $0.teleBottom + $0.teleMiddle + $0.teleTop < $1.teleBottom + $1.teleMiddle + $1.teleTop }
-        print(lowerToHigherTeleTeams)
-        print("Lower To Higher Tele Teams are \(lowerToHigherTeleTeams)")
         averageTeams = lowerToHigherTeleTeams
         sortBy = "lowerToHigherTelePoints"
     }
@@ -125,46 +115,41 @@ struct Teams: View {
         sortBy = "lowerToHigherTeamNumbers"
     }
     func applyFilters() {
+        print("Before Count \(averageTeams.count)")
         //Decode
         //Decode Min Points
         let decodedMinPoints = try? JSONDecoder().decode(Double.self, from: UserDefaults.standard.data(forKey: "amtOfPointsFilterKey") ?? Data())
         let minPoints = Double(decodedMinPoints ?? 0)
-        print("Min Points After Filters Applied \(minPoints)")
         //Decode Min Auto Points
         let decodedMinAutoPoints = try? JSONDecoder().decode(Double.self, from: UserDefaults.standard.data(forKey: "amtOfAutoPointsFilterKey") ?? Data())
         let minAutoPoints = Double(decodedMinAutoPoints ?? 0)
-        print("Min Auto Points After Filters Applied \(minAutoPoints)")
         //Decode Min Tele Points
         let decodedMinTelePoints = try? JSONDecoder().decode(Double.self, from: UserDefaults.standard.data(forKey: "amtOfTelePointsFilterKey") ?? Data())
         let minTelePoints = Double(decodedMinTelePoints ?? 0)
-        print("Min Tele Points After Filter Applied \(minTelePoints)")
         //Visual Update
-        print(averageTeams.count)
         displayTeams.removeAll()
+        @State var count = 0
         if (averageTeams.count > 0) {
-            for i in 0...teams.count-1 {
-                print("I is \(i)")
+            for i in 0...averageTeams.count-1 {
                 let teamAutoMinPoints = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop
                 let teamTeleMinPoints = averageTeams[i].teleBottom + averageTeams[i].teleBottom + averageTeams[i].teleTop
                 let points = averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop + averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop + averageTeams[i].allianceLinks + averageTeams[i].autoCharged + averageTeams[i].teleCharged + averageTeams[i].engagement + averageTeams[i].mobilityPoints + averageTeams[i].parkingPoints + averageTeams[i].rankingPoints
-                print("\(averageTeams[i])")
-                @State var count = 0
+                print("Points are \(points)")
+                print("Min Points \(minPoints)")
                 if (points >= minPoints && teamAutoMinPoints >= minAutoPoints && teamTeleMinPoints >= minTelePoints) {
                     displayTeams.append(averageTeams[i])
                     count+=1
-                    print("Count Is \(count)")
+                    print(count)
                 }
             }
-            print("DISPLAY TEAMS")
-            print(displayTeams)
             averageTeams.removeAll()
             averageTeams = displayTeams
+            print("AFter Count \(averageTeams.count)")
         }
     }
     
     func getTeamsRequest() async {
         //Teams URL
-        var availableTeams : [Int] = []
         //Get what teams available
         guard let availTeamsURL = URL(string: "http://api.etronicindustries.org/v1/teams") else {
             print("Error fetching available teams")
@@ -226,32 +211,44 @@ struct Teams: View {
                 }
             }
         }
-        //Get Averages
-        await getTeamAveragesRequest()
+        
     }
     //Get Average Teams Data
     func getTeamAveragesRequest() async {
-        for i in 0...teams.count-1 {
-            guard let teamAveragesURL = URL(string: "http://api.etronicindustries.org/v1/\(teams[i].name)/averages") else {
+        averageTeams.removeAll()
+        availableTeams.removeAll()
+        //Get what teams available
+        guard let availTeamsURL = URL(string: "http://api.etronicindustries.org/v1/teams") else {
+            print("Error fetching available teams")
+            return
+        }
+        do {
+            let(availTeamsData, _) = try await URLSession.shared.data(from: availTeamsURL)
+            
+            let decodedTeamsAvailData = try JSONDecoder().decode(teamsAvailStruct?.self, from: availTeamsData)
+            let arrayData = decodedTeamsAvailData?.array
+            for i in 0...arrayData!.count - 1 {
+                print(Int(arrayData![i].team) ?? 0)
+                availableTeams.append(Int(arrayData![i].team) ?? 0)
+            }
+        } catch {
+            print(error)
+        }
+        print(availableTeams)
+        for i in 0...availableTeams.count-1 {
+            guard let teamAveragesURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/averages") else {
                 print("Average Teams URL Error")
                 return
             }
             print(teamAveragesURL)
-            print("")
             do {
-                print("runnin")
                 let(decodedTeamData, _) = try await URLSession.shared.data(from: teamAveragesURL)
                 guard let decodedAverageData = try JSONDecoder().decode(AverageDataStruct?.self, from: decodedTeamData) else {
                     print("error")
                     return
                 }
-                print("decoded Data \(decodedTeamData)")
                 let decodedAverageTeam : AverageDataTeamStruct = decodedAverageData.objectJSON
-                print(" asfjasf")
-                print("\(decodedAverageData) decodedData")
-                print(decodedAverageTeam)
                 averageTeams.append(decodedAverageTeam)
-                print(averageTeams)
                 //Encode
                 if let encoded = try? JSONEncoder().encode(averageTeams) {
                     UserDefaults.standard.set(encoded, forKey: "averageTeamsKey")
@@ -343,7 +340,8 @@ struct Teams: View {
                         }
                     }
                     .refreshable {
-                        await getTeamsRequest()
+                        //Get Averages
+                        await getTeamAveragesRequest()
                         print("run")
                         applyFilters()
                     }
