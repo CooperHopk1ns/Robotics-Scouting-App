@@ -8,11 +8,19 @@
 import SwiftUI
 import Charts
 
+struct AverageDataTeamStructDisplay: Identifiable {
+    let id : Int
+    let team : AverageTeamStruct
+    let points : Double
+    let pointType: String
+}
+
 struct ChartView: View {
     
     @State var teams : [Team] = []
     @State var teamsData : [AverageTeamStruct] = []
     @State var averageTeams : [AverageDataTeamStruct] = []
+    @State var averageTeamsChartDisplay : [AverageDataTeamStructDisplay] = []
     var name = ""
     @State var location = 0
     @State var selectedChartView = "total points"
@@ -41,7 +49,6 @@ struct ChartView: View {
                 for i in 0...(decodedAverageTeamData?.count ?? 1)-1 {
                     averageTeams.append(decodedAverageTeamData![i])
                     print(decodedAverageTeamData![i])
-                    print("runnin")
                 }
             }
         }
@@ -68,14 +75,12 @@ struct ChartView: View {
     @State var averageParkingPoints = 0.0
     @State var averageRankingPoints = 0.0
     @State var averageAllianceLinks = 0.0
+    
     func assignTeamsData() {
-        
-        count = Double(teams.count)
-        print("Count \(count)")
+        count = Double(averageTeams.count)
         print("Average Teams Count is \(averageTeams.count)")
-        if (teams.count > 0) {
-            for i in 0...teams.count-1 {
-                print("I is \(i)")
+        if (averageTeams.count > 0) {
+            for i in 0...averageTeams.count-1 {
                 averagePoints += averageTeams[i].autoBottom + averageTeams[i].autoMiddle + averageTeams[i].autoTop + averageTeams[i].teleBottom + averageTeams[i].teleMiddle + averageTeams[i].teleTop + averageTeams[i].autoCharged + averageTeams[i].teleCharged + averageTeams[i].engagement + averageTeams[i].mobilityPoints + averageTeams[i].parkingPoints + averageTeams[i].rankingPoints + averageTeams[i].allianceLinks
                 averageAutoBottomPoints += averageTeams[i].autoBottom
                 averageAutoMiddlePoints += averageTeams[i].autoMiddle
@@ -106,44 +111,41 @@ struct ChartView: View {
             averageRankingPoints = averageRankingPoints/count
             averageAllianceLinks = averageAllianceLinks/count
         }
-        //Assign
+        //Create Average Team
         @State var averageTeam = AverageDataTeamStruct(team: "1", matchNumber: "0", alliance: "blue", autoBottom: averageAutoBottomPoints, autoMiddle: averageAutoMiddlePoints, autoTop: averageAutoTopPoints, teleBottom: averageTeleBottomPoints, teleMiddle: averageTeleMiddlePoints, teleTop: averageTeleTopPoints, allianceLinks: averageAllianceLinks, autoCharged: averageAutoCharged, teleCharged: averageTeleCharged, engagement: averageEngagement, mobilityPoints: averageMobilityPoints, parkingPoints: averageParkingPoints, rankingPoints: averageRankingPoints)
-        @State var newAverageTeam = AverageTeamStruct(id: 2, name: "Average Team", totalPoints: averagePoints, obj: averageTeam);
-        teamsData.removeAll()
-        teamsData.append(selectedTeam)
-        teamsData.append(newAverageTeam)
-        print("POINTSJSLKDNFSJF \(newAverageTeam.totalPoints)")
-        print("POINSTNSLFNSFSDD \(selectedTeam.totalPoints)")
+        @State var newAverageTeam = AverageTeamStruct(id: 2, name: "Average Team", totalPoints: averagePoints, obj: averageTeam)
+        //New
+        @State var newSelectedTelePointsDisplayTeam = AverageDataTeamStructDisplay(id: 1, team: selectedTeam, points: selectedTeam.obj.teleBottom + selectedTeam.obj.teleMiddle + selectedTeam.obj.teleTop + selectedTeam.obj.teleCharged, pointType: "Tele Points")
+        @State var newSelectedAutoPointsDisplayTeam = AverageDataTeamStructDisplay(id: 1, team: selectedTeam, points: selectedTeam.obj.autoBottom + selectedTeam.obj.autoMiddle + selectedTeam.obj.autoTop + selectedTeam.obj.autoCharged, pointType: "Auto Points")
+        @State var newSelectedOtherPointsDisplayTeam = AverageDataTeamStructDisplay(id: 1, team: selectedTeam, points: selectedTeam.obj.mobilityPoints + selectedTeam.obj.parkingPoints + selectedTeam.obj.rankingPoints, pointType: "Other Points")
+        averageTeamsChartDisplay.append(newSelectedTelePointsDisplayTeam)
+        averageTeamsChartDisplay.append(newSelectedAutoPointsDisplayTeam)
+        averageTeamsChartDisplay.append(newSelectedOtherPointsDisplayTeam)
+        @State var newAverageTelePointsDisplayTeam = AverageDataTeamStructDisplay(id: 2, team: newAverageTeam, points: newAverageTeam.obj.teleBottom + newAverageTeam.obj.teleMiddle + newAverageTeam.obj.teleTop + newAverageTeam.obj.teleCharged, pointType: "Tele Points")
+        @State var newAverageAutoPointsDisplayTeam = AverageDataTeamStructDisplay(id: 2, team: newAverageTeam, points: newAverageTeam.obj.autoBottom + newAverageTeam.obj.autoMiddle + newAverageTeam.obj.autoTop + newAverageTeam.obj.autoCharged, pointType: "Auto Points")
+        @State var newAverageOtherPointsDisplayTeam = AverageDataTeamStructDisplay(id: 2, team: newAverageTeam, points: newAverageTeam.obj.mobilityPoints + newAverageTeam.obj.parkingPoints + newAverageTeam.obj.rankingPoints, pointType: "Other Points")
+        averageTeamsChartDisplay.append(newAverageTelePointsDisplayTeam)
+        averageTeamsChartDisplay.append(newAverageAutoPointsDisplayTeam)
+        averageTeamsChartDisplay.append(newAverageOtherPointsDisplayTeam)
     }
     
     var body: some View {
         VStack {
-            //Chart Selector
-            Picker("Chart Type", selection: $selectedChartView) {
-                ForEach(chartViews, id: \.self) { chart in
-                        Text(chart.capitalized)
-                    }
-            }
-            .pickerStyle(.segmented)
-            .padding([.leading, .trailing], 10)
-            .padding([.bottom])
-            .onChange(of: chartViews) { view in
-                yValueText = "Auto Points"
-                yValue = 12
-            }
             //Chart View
             if #available(iOS 16.0, *) {
                 Chart {
-                    ForEach(teamsData) { team in
+                    ForEach(averageTeamsChartDisplay) { team in
                         BarMark (
                             //Selected Team Points
-                            x: .value("Team", team.name),
+                            x: .value("Team", team.team.name),
                             //Add up values in average team struct and use here
-                            y: .value("Total Points", team.totalPoints),
-                            width: 50
+                            y: .value("Total Points", team.points),
+                            width: 50,
+                            stacking: .standard
                         )
-                        .foregroundStyle(Color.blue)
+                        //.foregroundStyle(Color.blue)
                         .cornerRadius(12, style: .continuous)
+                        .foregroundStyle(by: .value("Point Type", team.pointType))
                     }
                 }
                 .padding(20)
@@ -152,8 +154,8 @@ struct ChartView: View {
             }
         }
         .onAppear {
-            decodeJSONTeamData()
             decodeJSONAverageTeamData()
+            decodeJSONTeamData()
             assignTeamsData()
         }
     }

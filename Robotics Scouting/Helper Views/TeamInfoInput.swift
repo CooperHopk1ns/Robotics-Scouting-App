@@ -611,7 +611,7 @@ struct TeamInfoInput: View {
                                 print(count)
                                 teams.append(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: 0, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints, autoCharged: autoChargeEngagedInt, teleCharged: teleChargeEngagedInt, engagement: 1, mobilityPoints: mobilityBonusInt, parkingPoints: parkingBonusInt, rankingPoints: rankingPoints))
                             } else {
-                                let tempTeam = teams[location]
+                                //let tempTeam = teams[location]
                                 teams.remove(at: location)
                                 teams.insert(Team.init(id: Int(team) ?? 0, name: team, gamesPlayed: 0, totalPoints: bottomAutoPoints + middleAutoPoints + topAutoPoints + bottomTelePoints + middleTelePoints + topTelePoints, autoBottomPoints: bottomAutoPoints, autoMiddlePoints: middleAutoPoints, autoTopPoints: topAutoPoints, teleBottomPoints: bottomTelePoints, teleMiddlePoints: middleTelePoints, teleTopPoints: topTelePoints, autoCharged: autoChargeEngagedInt, teleCharged: teleChargeEngagedInt, engagement: 1, mobilityPoints: mobilityBonusInt, parkingPoints: parkingBonusInt, rankingPoints: rankingPoints), at: location)
                             }
@@ -623,16 +623,17 @@ struct TeamInfoInput: View {
                                 await pushTeam()
                             }
                             //Present Completion Alert
-                            showCompletionAlert = true;
+                            showCompletionAlert = true
                         } else {
                             print("Error")
-                            showAlert = true;
+                            showAlert = true
                         }
                     }
                     //Error Alert
                     .alert(isPresented: $showAlert) {
                         Alert(title: Text("Error"), message: Text("Please Fill In All Values Not Listed Under Points"))
                     }
+
                     //Enter Alert
                     .alert(isPresented: $showCompletionAlert) {
                         Alert(title: Text("Success!"), message: Text("You Have Successfully Added Data"))
