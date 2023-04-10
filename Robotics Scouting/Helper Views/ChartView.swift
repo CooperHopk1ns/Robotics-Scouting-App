@@ -158,6 +158,9 @@ struct ChartView: View {
             decodeJSONTeamData()
             assignTeamsData()
         }
+        .onDisappear {
+            averageTeamsChartDisplay.removeAll()
+        }
     }
 }
 
