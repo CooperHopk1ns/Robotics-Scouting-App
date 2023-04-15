@@ -23,7 +23,6 @@
 		6669C4D229C2646800592D83 /* checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6669C4D129C2646800592D83 /* checkbox.swift */; };
 		66A2A96629CB28CF007FD812 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A2A96529CB28CF007FD812 /* ChartView.swift */; };
 		66C94CF429E8B085004ECA7E /* InternetCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C94CF329E8B085004ECA7E /* InternetCheck.swift */; };
-		66E04FE829BDA0B600F65FBA /* todo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 66E04FE729BDA0B600F65FBA /* todo.txt */; };
 		66E04FEC29BE6BCE00F65FBA /* TeamFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E04FEB29BE6BCE00F65FBA /* TeamFilter.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,7 +45,6 @@
 		6669C4D129C2646800592D83 /* checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = checkbox.swift; sourceTree = "<group>"; };
 		66A2A96529CB28CF007FD812 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		66C94CF329E8B085004ECA7E /* InternetCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetCheck.swift; sourceTree = "<group>"; };
-		66E04FE729BDA0B600F65FBA /* todo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		66E04FEB29BE6BCE00F65FBA /* TeamFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamFilter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,7 +92,6 @@
 				6610ECC929B8C4B100D1161D /* Robotics-Scouting-Info.plist */,
 				66641CB929B1632D00566C24 /* Robotics_ScoutingApp.swift */,
 				66641CBB29B1632D00566C24 /* ContentView.swift */,
-				66E04FE729BDA0B600F65FBA /* todo.txt */,
 				66641CC729B1A90E00566C24 /* Helper Views */,
 				66641CBD29B1632E00566C24 /* Assets.xcassets */,
 				66641CBF29B1632E00566C24 /* Preview Content */,
@@ -194,7 +191,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				66641CC129B1632E00566C24 /* Preview Assets.xcassets in Resources */,
-				66E04FE829BDA0B600F65FBA /* todo.txt in Resources */,
 				66641CBE29B1632E00566C24 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
