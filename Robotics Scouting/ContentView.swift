@@ -8,23 +8,27 @@
 import SwiftUI
 
 struct ContentView: View {
-        
+    @EnvironmentObject var networkMonitor: NetworkMonitor
     var body: some View {
-        NavigationView {
-            TabView {
-                Teams()
-                    .tabItem {
-                        Label("Teams", systemImage: "person.3")
-                    }
-                TeamInfoInput()
-                    .tabItem {
-                        Label("Input", systemImage: "plus.square")
-                    }
-                Settings()
-                    .tabItem{
-                        Label("Settings", systemImage: "gearshape.fill")
-                    }
+        if (networkMonitor.isConnected) {
+            NavigationView {
+                TabView {
+                    Teams()
+                        .tabItem {
+                            Label("Teams", systemImage: "person.3")
+                        }
+                    TeamInfoInput()
+                        .tabItem {
+                            Label("Input", systemImage: "plus.square")
+                        }
+                    Settings()
+                        .tabItem{
+                            Label("Settings", systemImage: "gearshape.fill")
+                        }
+                }
             }
+        } else {
+            NoInternetView()
         }
     }
 }

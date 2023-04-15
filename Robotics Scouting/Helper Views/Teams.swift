@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Teams: View {
     
+    
     @State var teams : [Team] = []
     @State var averageTeams : [AverageDataTeamStruct] = []
     @State var availableTeams : [Int] = []
@@ -24,35 +25,8 @@ struct Teams: View {
     @State var sortBy = "";
     @State var hasInternet = true;
     
-    
-    //Check For Internet Connection
-    func checkInternet() {
-        guard let googleURL = URL(string: "https://www.google.com") else {
-            print("NO INTERNET")
-            hasInternet = false
-            return
-        }
-        URLSession.shared.dataTask(with: googleURL) { (data, response, error) in
-                if let error = error {
-                    print("Error checking internet connection: \(error.localizedDescription)")
-                    hasInternet = false
-                    return
-                }
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    hasInternet = false
-                    return
-                }
-            print(httpResponse.statusCode)
-            if (httpResponse.statusCode == 200) {
-                hasInternet = true;
-                return
-            }
-        }
-        print(hasInternet)
-    }
     //Initialize
     init() {
-        checkInternet()
         filterHigherToLowerTeamNumbers()
     }
     //Search and Filters

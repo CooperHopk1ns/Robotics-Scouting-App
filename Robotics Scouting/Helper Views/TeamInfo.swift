@@ -83,7 +83,8 @@ struct TeamInfo: View {
                                 Text("Average Cycles: \(bottomAutoAveragePoints + middleAutoAveragePoints + topAutoAveragePoints + bottomTeleAveragePoints + middleTeleAveragePoints + topTeleAveragePoints, specifier: "%.3f")")
                                 Text("Average Cycle Time: \(150/(bottomAutoAveragePoints + middleAutoAveragePoints + topAutoAveragePoints + bottomTeleAveragePoints + middleTeleAveragePoints + topTeleAveragePoints), specifier: "%.2f")s")
                             }
-                                .fontWeight(.bold)
+                                //.fontWeight(.bold)
+                                .font(.system(size: 14, weight: .bold))
                                 .padding([.top, .bottom], 8)
                                 .frame(width: UIScreen.main.bounds.width - 20)
                                 
@@ -144,7 +145,7 @@ struct TeamInfo: View {
                                     Text("Average Top Auto: \(topAutoAveragePoints, specifier: "%.3f")")
                                         .padding([.top, .bottom], 3)
                                 }
-                                .fontWeight(.bold)
+                                //.fontWeight(.bold)
                                 .frame(width: UIScreen.main.bounds.width - 20)
                             } else {
                                 Text("Auto points are earned during the autonomous period. Scoring on the top spot is worth 6 points, scoring on the middle is worth 4 points, and scoring on bottom is worth 3 points.")
@@ -195,7 +196,6 @@ struct TeamInfo: View {
                                             Text("Average Top Tele: \(topTeleAveragePoints, specifier: "%.3f")")
                                                 .padding([.top, .bottom], 3)
                                         }
-                                        .fontWeight(.bold)
                                         .frame(width: UIScreen.main.bounds.width - 20)
                                 } else {
                                     Text("Tele points are the points earned while the robot is controlled by a human player. Scoring on the top spot is worth 5 points, scoring on the middle is worth 3 points, and scoring on bottom is worth 2 points.")

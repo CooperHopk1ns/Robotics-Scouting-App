@@ -187,7 +187,7 @@ struct TeamInfoInput: View {
                         .padding([.top])
                         .overlay (
                             RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.black, lineWidth: 3)
+                                .stroke(Color(red: 215/255, green: 215/255, blue: 215/255), lineWidth: 3)
                         )
                         .background(Color(UIColor.systemBackground))
                         .cornerRadius(20)

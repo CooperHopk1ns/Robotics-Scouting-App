@@ -10,9 +10,12 @@ import SwiftUI
 @main
 struct Robotics_ScoutingApp: App {
     
+    @StateObject var networkMonitor = NetworkMonitor()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(networkMonitor)
         }
     }
 }
