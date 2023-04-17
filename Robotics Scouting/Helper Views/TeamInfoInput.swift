@@ -57,7 +57,7 @@ struct TeamInfoInput: View {
     //Push New Team To API
     func pushTeam() async {
         print(team)
-        guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(team)/data") else {
+        guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(team)/data/stand") else {
             print("error")
             return
         }
@@ -304,9 +304,9 @@ struct TeamInfoInput: View {
                         .background(Color(UIColor.systemBackground))
                         .cornerRadius(20)
                         .shadow(radius: 5, y: 5)
-                        .onTapGesture {
-                            autoPointsFlip = !autoPointsFlip
-                        }
+//                        .onTapGesture {
+//                            autoPointsFlip = !autoPointsFlip
+//                        }
                         .rotation3DEffect(
                             Angle.degrees(autoPointsFlip ? 180:0),
                             axis: (0,1,0),
@@ -320,7 +320,7 @@ struct TeamInfoInput: View {
                             anchorZ: 0,
                             perspective: 0
                         )
-                        .animation(Animation.linear(duration: 0.3), value: autoPointsFlip)
+                        //.animation(Animation.linear(duration: 0.3), value: autoPointsFlip)
                         //Tele Op
                         VStack {
                             Text("Tele Points")
@@ -433,9 +433,9 @@ struct TeamInfoInput: View {
                         .background(Color(UIColor.systemBackground))
                         .cornerRadius(20)
                         .shadow(radius: 5, y: 5)
-                        .onTapGesture {
-                            telePointsFlip = !telePointsFlip
-                        }
+//                        .onTapGesture {
+//                            telePointsFlip = !telePointsFlip
+//                        }
                         .rotation3DEffect(
                             Angle.degrees(telePointsFlip ? 180:0),
                             axis: (0,1,0),
@@ -449,7 +449,7 @@ struct TeamInfoInput: View {
                             anchorZ: 0,
                             perspective: 0
                         )
-                        .animation(Animation.linear(duration: 0.3), value: telePointsFlip)
+                        //.animation(Animation.linear(duration: 0.3), value: telePointsFlip)
                         //Other Points
                         VStack {
                             Text("Other Points")
@@ -508,9 +508,9 @@ struct TeamInfoInput: View {
                         .background(Color(UIColor.systemBackground))
                         .cornerRadius(20)
                         .shadow(radius: 5, y: 5)
-                        .onTapGesture {
-                            otherPointsFlip = !otherPointsFlip
-                        }
+//                        .onTapGesture {
+//                            otherPointsFlip = !otherPointsFlip
+//                        }
                         .rotation3DEffect(
                             Angle.degrees(otherPointsFlip ? 180:0),
                             axis: (0,1,0),
@@ -524,7 +524,7 @@ struct TeamInfoInput: View {
                             anchorZ: 0,
                             perspective: 0
                         )
-                        .animation(Animation.linear(duration: 0.3), value: otherPointsFlip)
+                        //.animation(Animation.linear(duration: 0.3), value: otherPointsFlip)
                         
                     //Enter
                     Button("Enter") {

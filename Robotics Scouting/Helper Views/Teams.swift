@@ -51,7 +51,6 @@ struct Teams: View {
         averageTeams = lowerToHigherTeams
         sortBy = "lowerToHigherPoints"
     }
-    //UPDATE VALUES FOR AVERAGEDATATEAMSTRUCT
     @State var higherToLowerAutoTeams : [AverageDataTeamStruct] = []
     func filterHigherToLowerAutoPoints() {
         higherToLowerAutoTeams = averageTeams.sorted { $0.autoBottom + $0.autoMiddle + $0.autoTop > $1.autoBottom + $1.autoMiddle + $1.autoTop }
@@ -145,7 +144,7 @@ struct Teams: View {
         //FATAL ERROR IF NO INTERNET
         if (availableTeams.count > 0) {
             for i in 0...availableTeams.count-1 {
-                guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/data") else {
+                guard let teamsURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/data/stand") else {
                     print("Teams URL Error")
                     return
                 }
@@ -210,7 +209,7 @@ struct Teams: View {
         }
         print(availableTeams)
         for i in 0...availableTeams.count-1 {
-            guard let teamAveragesURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/averages") else {
+            guard let teamAveragesURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/data/stand/averages") else {
                 print("Average Teams URL Error")
                 return
             }
