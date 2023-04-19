@@ -235,6 +235,7 @@ struct TeamInfo: View {
                     .padding([.bottom], 30)
                 }
             }
+            RobotInfoView()
         }
         .navigationTitle("Team \(selected)")
         .frame(width: UIScreen.main.bounds.width)

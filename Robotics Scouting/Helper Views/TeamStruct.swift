@@ -115,3 +115,20 @@ public struct AverageTeamStruct: Hashable, Codable, Identifiable {
     var totalPoints: Double
     var obj: AverageDataTeamStruct
 }
+
+public struct PitTeamPushStruct: Decodable, Hashable, Encodable {
+    public let team: String
+    public let password: String
+    public let drivetrain: String
+    public let link: String
+    public let intake: String
+    public let pneumatics: String
+    public let pieceType: String
+    public let highestNode: String
+    public let bestAuto: String
+    public let defense: String
+}
+
+public struct PitTeamStruct: Hashable, Codable, Identifiable {
+    public var id: Int
+}

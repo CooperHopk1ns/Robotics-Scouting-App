@@ -21,6 +21,7 @@
 		66641CD029B1AA1D00566C24 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CCF29B1AA1D00566C24 /* Settings.swift */; };
 		66641CD229B1AB6C00566C24 /* TeamStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66641CD129B1AB6C00566C24 /* TeamStruct.swift */; };
 		6669C4D229C2646800592D83 /* checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6669C4D129C2646800592D83 /* checkbox.swift */; };
+		666A72CB29EF4B7F00437847 /* RobotInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666A72CA29EF4B7F00437847 /* RobotInfoView.swift */; };
 		66A2A96629CB28CF007FD812 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A2A96529CB28CF007FD812 /* ChartView.swift */; };
 		66C94CF429E8B085004ECA7E /* InternetCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C94CF329E8B085004ECA7E /* InternetCheck.swift */; };
 		66E04FEC29BE6BCE00F65FBA /* TeamFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E04FEB29BE6BCE00F65FBA /* TeamFilter.swift */; };
@@ -43,6 +44,7 @@
 		66641CCF29B1AA1D00566C24 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		66641CD129B1AB6C00566C24 /* TeamStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamStruct.swift; sourceTree = "<group>"; };
 		6669C4D129C2646800592D83 /* checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = checkbox.swift; sourceTree = "<group>"; };
+		666A72CA29EF4B7F00437847 /* RobotInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotInfoView.swift; sourceTree = "<group>"; };
 		66A2A96529CB28CF007FD812 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		66C94CF329E8B085004ECA7E /* InternetCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetCheck.swift; sourceTree = "<group>"; };
 		66E04FEB29BE6BCE00F65FBA /* TeamFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamFilter.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			children = (
 				66641CC829B1A92800566C24 /* TeamInfoInput.swift */,
 				66A2A96529CB28CF007FD812 /* ChartView.swift */,
+				666A72CA29EF4B7F00437847 /* RobotInfoView.swift */,
 				66641CCA29B1A93000566C24 /* TeamInfo.swift */,
 				66641CCC29B1A93F00566C24 /* Teams.swift */,
 				66C94CF329E8B085004ECA7E /* InternetCheck.swift */,
@@ -213,6 +216,7 @@
 				66641CD229B1AB6C00566C24 /* TeamStruct.swift in Sources */,
 				66A2A96629CB28CF007FD812 /* ChartView.swift in Sources */,
 				66641CBA29B1632D00566C24 /* Robotics_ScoutingApp.swift in Sources */,
+				666A72CB29EF4B7F00437847 /* RobotInfoView.swift in Sources */,
 				6610D04B29B62B91001B8F9C /* FeedbackForm.swift in Sources */,
 				66641CC929B1A92800566C24 /* TeamInfoInput.swift in Sources */,
 				6669C4D229C2646800592D83 /* checkbox.swift in Sources */,
