@@ -60,9 +60,9 @@ struct TeamInfoInput: View {
     @State var drivetrain = "swerve"
     @State var drivetrainTypes = ["tank", "mecanum", "omni", "swerve"]
     @State var link = "1 link"
-    @State var linkOptions = ["1 link", "2 link", "3 link"]
+    @State var linkOptions = ["1 link", "2 link", "3 link", "elevator", "rotating telescope", "other"]
     @State var intake = "arm"
-    @State var intakeOptions = ["arm", "elevator", "rotating telescope", "everybot"]
+    @State var intakeOptions = ["pneumatic", "everybot", "our style", "other"]
     @State var pneumatics = "no"
     @State var pneumaticsOptions = ["no", "yes"]
     @State var pieceType = "both"
@@ -70,7 +70,7 @@ struct TeamInfoInput: View {
     @State var highestNode = "low"
     @State var highestNodeOptions = ["low", "middle", "high"]
     @State var bestAuto = "1 piece"
-    @State var bestAutoOptions = ["1 piece", "2 piece", "3 piece", "1 piece + charge", "2 piece + charge", "3 piece + charge"]
+    @State var bestAutoOptions = ["1 piece", "2 piece", "3 piece", "1 piece + charge", "2 piece + charge", "3 piece + charge", "none"]
     @State var defense = "no"
     @State var defenseOptions = ["no", "yes"]
     //Push New Team To API
@@ -180,7 +180,7 @@ struct TeamInfoInput: View {
         team = ""
         drivetrain = "swerve"
         link = "1 link"
-        intake = "arm"
+        intake = "pneumatic"
         pneumatics = "no"
         pieceType = "both"
         highestNode = "low"
@@ -739,8 +739,8 @@ struct TeamInfoInput: View {
                                     }
                                 }
                                 HStack {
-                                    Text("Link:")
-                                    Picker("Link", selection: $link) {
+                                    Text("Arm:")
+                                    Picker("Arm", selection: $link) {
                                         ForEach(linkOptions, id: \.self) { link in
                                             Text(link.capitalized)
                                             
