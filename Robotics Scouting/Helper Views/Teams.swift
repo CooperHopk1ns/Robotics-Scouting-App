@@ -187,6 +187,7 @@ struct Teams: View {
         
     }
     //Get Average Teams Data
+    //FOR PIT SCOUTING HAVE IT GET INFO AND CROSS CHECK. IF EXISTS THEN DONT ADD VISUALLY, IF NOT EXIST ADD VISUALLY AND SAY NO STAND DATA
     func getTeamAveragesRequest() async {
         averageTeams.removeAll()
         availableTeams.removeAll()
@@ -231,6 +232,63 @@ struct Teams: View {
             }
         }
         print("average teams \(averageTeams)")
+        print("Getting pit data")
+//        await getPitTeamData()
+    }
+    func getPitTeamData() async {
+        availableTeams.removeAll()
+        //Get what teams available
+        guard let availTeamsURL = URL(string: "http://api.etronicindustries.org/v1/teams") else {
+            print("Error fetching available teams")
+            return
+        }
+        do {
+            let(availTeamsData, _) = try await URLSession.shared.data(from: availTeamsURL)
+            
+            let decodedTeamsAvailData = try JSONDecoder().decode(teamsAvailStruct?.self, from: availTeamsData)
+            let arrayData = decodedTeamsAvailData?.array
+            for i in 0...arrayData!.count - 1 {
+                print(Int(arrayData![i].team) ?? 0)
+                availableTeams.append(Int(arrayData![i].team) ?? 0)
+            }
+        } catch {
+            print(error)
+        }
+        print("Starting transfer")
+        print(averageTeams.count)
+        //Get Teams With Only Pit Data
+        for i in 0...availableTeams.count-1 {
+            guard let teamPitDataURL = URL(string: "http://api.etronicindustries.org/v1/\(availableTeams[i])/data/pit") else {
+                print("Team Pit Data URL ERROR")
+                return
+            }
+            do {
+                let (pitData, _) = try await URLSession.shared.data(from: teamPitDataURL)
+                guard let decodedPitData = try JSONDecoder().decode(PitTeamFetchOuterStruct?.self, from: pitData) else {
+                    print("Error decoding")
+                    return
+                }
+                //Check
+                var new = true
+                for i in 0...averageTeams.count-1 {
+                    if (averageTeams[i].team == decodedPitData.objectJSON.team) {
+                        new = false
+                        print(new)
+                    }
+                    print(new)
+                }
+                if (new == true) {
+                    let tempAverageTeam = AverageDataTeamStruct(team: decodedPitData.objectJSON.team, matchNumber: "0", alliance: "blue", autoBottom: 0, autoMiddle: 0, autoTop: 0, teleBottom: 0, teleMiddle: 0, teleTop: 0, allianceLinks: 0, autoCharged: 0, teleCharged: 0, engagement: 0, mobilityPoints: 0, parkingPoints: 0, rankingPoints: 0)
+                    averageTeams.append(tempAverageTeam)
+                }
+                //Encode
+                if let encoded = try? JSONEncoder().encode(averageTeams) {
+                    UserDefaults.standard.set(encoded, forKey: "averageTeamsKey")
+                }
+            } catch {
+                
+            }
+        }
     }
     
     var body: some View {

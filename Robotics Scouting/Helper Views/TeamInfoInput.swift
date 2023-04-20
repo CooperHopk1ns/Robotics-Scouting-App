@@ -153,7 +153,7 @@ struct TeamInfoInput: View {
             print("error")
             return
         }
-        let pitTeamPushJson = PitTeamPushStruct.init(team: team, password: "chicken3082!", drivetrain: drivetrain, link: link, intake: intake, pneumatics: pneumatics, pieceType: pieceType, highestNode: highestNode, bestAuto: bestAuto, defense: defense)
+        let pitTeamPushJson = PitTeamStruct.init(team: team, password: "chicken3082!", drivetrain: drivetrain, link: link, intake: intake, pneumatics: pneumatics, pieceType: pieceType, highestNode: highestNode, bestAuto: bestAuto, defense: defense)
         if let encoded = try? JSONEncoder().encode(pitTeamPushJson) {
             print(pitTeamPushJson)
             var request = URLRequest(url: pitTeamsURL)
@@ -370,7 +370,7 @@ struct TeamInfoInput: View {
                             .padding([.bottom])
                             .overlay (
                                 RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.black, lineWidth: 3)
+                                    .stroke(Color(red: 215/255, green: 215/255, blue: 215/255), lineWidth: 3)
                             )
                             .background(Color(UIColor.systemBackground))
                             .cornerRadius(20)
@@ -499,7 +499,7 @@ struct TeamInfoInput: View {
                             .padding([.bottom])
                             .overlay (
                                 RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.black, lineWidth: 3)
+                                    .stroke(Color(red: 215/255, green: 215/255, blue: 215/255), lineWidth: 3)
                             )
                             .background(Color(UIColor.systemBackground))
                             .cornerRadius(20)
@@ -574,7 +574,7 @@ struct TeamInfoInput: View {
                             .padding([.bottom])
                             .overlay (
                                 RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.black, lineWidth: 3)
+                                    .stroke(Color(red: 215/255, green: 215/255, blue: 215/255), lineWidth: 3)
                             )
                             .background(Color(UIColor.systemBackground))
                             .cornerRadius(20)
@@ -675,7 +675,7 @@ struct TeamInfoInput: View {
                             .background(Color(UIColor.systemBackground))
                             .overlay (
                                 RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.black, lineWidth: 3)
+                                    .stroke(Color(red: 215/255, green: 215/255, blue: 215/255), lineWidth: 3)
                             )
                             .cornerRadius(20)
                             .shadow(radius: 5, y: 5)
@@ -830,8 +830,8 @@ struct TeamInfoInput: View {
                                     }
                                 }
                             }
-                            .frame(width: UIScreen.main.bounds.width-20)
-                            .padding([.bottom, .top], 20)
+                            .frame(width: UIScreen.main.bounds.width/2.5, height: 40)
+                            .background(Color(UIColor.systemBackground))
                             .overlay (
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color(red: 215/255, green: 215/255, blue: 215/255), lineWidth: 3)
@@ -839,6 +839,7 @@ struct TeamInfoInput: View {
                             .background(Color(UIColor.systemBackground))
                             .cornerRadius(20)
                             .shadow(radius: 5, y: 5)
+                            .padding([.bottom], 20)
                         }
                     }
                     .padding([.bottom], 10)

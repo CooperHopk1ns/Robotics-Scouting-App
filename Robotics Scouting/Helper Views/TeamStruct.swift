@@ -116,7 +116,7 @@ public struct AverageTeamStruct: Hashable, Codable, Identifiable {
     var obj: AverageDataTeamStruct
 }
 
-public struct PitTeamPushStruct: Decodable, Hashable, Encodable {
+public struct PitTeamStruct: Decodable, Hashable, Encodable {
     public let team: String
     public let password: String
     public let drivetrain: String
@@ -129,6 +129,19 @@ public struct PitTeamPushStruct: Decodable, Hashable, Encodable {
     public let defense: String
 }
 
-public struct PitTeamStruct: Hashable, Codable, Identifiable {
-    public var id: Int
+public struct PitTeamFetchOuterStruct: Decodable {
+    public let success: Bool
+    public let objectJSON: PitTeamFetchStruct
+}
+
+public struct PitTeamFetchStruct: Decodable, Hashable, Encodable {
+    public let team: String
+    public let drivetrain: String
+    public let link: String
+    public let intake: String
+    public let pneumatics: String
+    public let pieceType: String
+    public let highestNode: String
+    public let bestAuto: String
+    public let defense: String
 }

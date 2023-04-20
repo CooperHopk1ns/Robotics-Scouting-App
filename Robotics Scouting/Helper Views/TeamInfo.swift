@@ -230,12 +230,11 @@ struct TeamInfo: View {
                                 perspective: 0
                             )
                             .animation(Animation.linear(duration: 0.3), value: teleFlip)
-                            .padding([.bottom])
                     }
-                    .padding([.bottom], 30)
                 }
             }
-            RobotInfoView()
+            RobotInfoView(selectedTeam: Int(selected) ?? 0)
+                .frame(width: UIScreen.main.bounds.width)
         }
         .navigationTitle("Team \(selected)")
         .frame(width: UIScreen.main.bounds.width)

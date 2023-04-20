@@ -21,10 +21,10 @@ struct ContentView: View {
                         .tabItem {
                             Label("Input", systemImage: "plus.square")
                         }
-                    Settings()
-                        .tabItem{
-                            Label("Settings", systemImage: "gearshape.fill")
-                        }
+//                    Settings()
+//                        .tabItem{
+//                            Label("Settings", systemImage: "gearshape.fill")
+//                        }
                 }
             }
         } else {
